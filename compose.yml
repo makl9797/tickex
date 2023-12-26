@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      target: base
+    stdin_open: true
+    tty: true
+    env_file: ./app/.env
+    volumes:
+      - code-sync:/app:delegated # Mutagen-Synchronisations-Volume
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tickex
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres-data:
+  code-sync: # Mutagen Volume
+
+x-mutagen:
+  sync:
+    app-code: # Eindeutiger Name für die Synchronisation
+      alpha: "./app" # Quellverzeichnis (Ihr lokales Verzeichnis)
+      beta: "volume://code-sync" # Ziel (Docker Volume)
+      mode: "two-way-resolved" # Synchronisationsmodus
+      ignore:
+        vcs: true # Ignoriert Versionskontrollsystem-Verzeichnisse (.git)
