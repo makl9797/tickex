@@ -16,6 +16,18 @@ services:
     depends_on:
       - postgres
 
+  chain:
+    build:
+      context: ./chain
+      dockerfile: Dockerfile
+      target: base
+    stdin_open: true
+    tty: true
+    ports:
+      - "7545:7545" # Beispiel für Ganache-Port, anpassen falls nötig
+    volumes:
+      - ./chain:/chain
+
   postgres:
     image: postgres:15-alpine
     environment:

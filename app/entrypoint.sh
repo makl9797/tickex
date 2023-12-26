@@ -1,5 +1,5 @@
 #!/bin/sh
-ls
+
 cd /opt/app
 mix deps.get
 mix ecto.migrate
