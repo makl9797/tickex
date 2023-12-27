@@ -2,6 +2,6 @@
 
 tail -f /dev/null
 
-bun install
+npm install
 
 exec "$@"
