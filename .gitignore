@@ -1,4 +1,4 @@
-# Elixir/Phoenix-spezifische Ignorierungen
+# Elixir/Phoenix-specific ignores
 /_build/
 /cover/
 /deps/
@@ -12,18 +12,20 @@ erl_crash.dump
 /node_modules/
 /priv/static/
 
-# Truffle und Blockchain-spezifische Ignorierungen
-/blockchain/build/
-/blockchain/node_modules/
+# Hardhat-specific ignores
+# Hinweis: Hardhat-spezifische Ignorierungen werden in der .gitignore im 'chain'-Verzeichnis behandelt
 
-# Allgemeine Dateiignorierungen
+# Docker-compose override for Mutagen (optional for Mac users)
+compose.override.yml
+
+# General file ignores
 .DS_Store
 Thumbs.db
 *.log
 *.pid
 *.pid.lock
 
-# Systemspezifische Ignorierungen
+# System-specific ignores
 .idea/
 .vscode/
 *.swp
