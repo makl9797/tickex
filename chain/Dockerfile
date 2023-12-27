@@ -4,15 +4,17 @@ WORKDIR /chain
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
-        build-essential \
-        python3 && \
+        build-essential && \
     rm -fr /var/lib/apt/lists/* && \
     rm -rf /etc/apt/sources.list.d/*
 
-RUN bun install hardhat
+# RUN bun install --save-dev hardhat
+# RUN bun install --save-dev ganache-cli
 
 # COPY package.json /chain
-# COPY package-lock.json /chain
+# COPY bun.lockb /chain
+
+# RUN bun install
 
 COPY ./entrypoint.sh .
 
