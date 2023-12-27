@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    volumes:
+      - code-sync:/app:delegated
+
+volumes:
+  code-sync:
+
+x-mutagen:
+  sync:
+    app-code:
+      alpha: "./app"
+      beta: "volume://code-sync"
+      mode: "two-way-resolved"
+      ignore:
+        vcs: true
