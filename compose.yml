@@ -10,7 +10,7 @@ services:
     tty: true
     env_file: ./app/.env
     volumes:
-      - code-sync:/app:delegated # Mutagen-Synchronisations-Volume
+      - code-sync:/app:delegated
     ports:
       - "4000:4000"
     depends_on:
@@ -24,7 +24,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "7545:7545" # Beispiel für Ganache-Port, anpassen falls nötig
+      - "8545:8545"
     volumes:
       - ./chain:/chain
 
@@ -40,13 +40,13 @@ services:
 
 volumes:
   postgres-data:
-  code-sync: # Mutagen Volume
+  code-sync: 
 
 x-mutagen:
   sync:
-    app-code: # Eindeutiger Name für die Synchronisation
-      alpha: "./app" # Quellverzeichnis (Ihr lokales Verzeichnis)
-      beta: "volume://code-sync" # Ziel (Docker Volume)
-      mode: "two-way-resolved" # Synchronisationsmodus
+    app-code: 
+      alpha: "./app" 
+      beta: "volume://code-sync"
+      mode: "two-way-resolved"
       ignore:
-        vcs: true # Ignoriert Versionskontrollsystem-Verzeichnisse (.git)
+        vcs: true
