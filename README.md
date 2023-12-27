@@ -61,7 +61,7 @@ cp .env.example .env
 ## MetaMask Setup
 
 1. Install MetaMask as a browser extension.
-2. Add your local network with the RPC URL `http://0.0.0.0:8545/` and Chain ID `80001`.
+2. Add your local network with the RPC URL `http://0.0.0.0:8545/` and Chain ID `1337`.
 3. Import the accounts displayed in the Hardhat logs into MetaMask to have test Ether for transactions.
 
 ## Starting the Project
