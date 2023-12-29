@@ -22,8 +22,16 @@ FROM ${BUILDER_IMAGE} as base
 
 WORKDIR /app
 
-RUN apt-get update -y && apt-get install -y build-essential inotify-tools \
+RUN apt-get update -y && apt-get install -y build-essential inotify-tools nodejs npm \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+WORKDIR /app/assets
+
+COPY assets/package.json assets/package-lock.json ./
+
+RUN npm install
+
+WORKDIR /app
 
 RUN mix local.hex --force
 
