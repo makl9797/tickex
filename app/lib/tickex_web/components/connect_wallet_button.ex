@@ -12,7 +12,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
         verify_signature: false
       )
 
-    {:noreply, socket}
+    {:ok, socket}
   end
 
   @impl true
@@ -21,6 +21,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
     <button
       class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
       phx-click="connect-metamask"
+      phx-target={@myself}
     >
       <img src={~p"/images/meta_mask.svg"} alt="MetaMask Logo" class="mr-2 h-6 w-6" /> Connect to Wallet
     </button>

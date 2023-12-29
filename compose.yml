@@ -27,6 +27,9 @@ services:
       - "8545:8545"
     volumes:
       - ./chain:/chain
+    depends_on:
+    - app
+
 
   postgres:
     image: postgres:15-alpine
