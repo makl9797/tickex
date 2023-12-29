@@ -22,8 +22,20 @@ FROM ${BUILDER_IMAGE} as base
 
 WORKDIR /app
 
-RUN apt-get update -y && apt-get install -y build-essential inotify-tools \
+RUN apt-get update -y && apt-get install -y build-essential inotify-tools curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
+
+RUN apt-get install -y nodejs
+
+WORKDIR /app/assets
+
+COPY assets/package.json assets/package-lock.json ./
+
+RUN npm install
+
+WORKDIR /app
 
 RUN mix local.hex --force
 
