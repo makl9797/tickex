@@ -4,8 +4,11 @@ defmodule Tickex.Accounts.User do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
+    field :wallet_address, :string
+    field :nonce, :string
+    field :name, :string
     field :email, :string
-    field :confirmed_at, :naive_datetime
+    field :registration_date, :naive_datetime
 
     timestamps(type: :utc_datetime)
   end

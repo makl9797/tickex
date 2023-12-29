@@ -101,8 +101,9 @@ defmodule Tickex.Accounts.UserToken do
   The given token is valid if it matches its hashed counterpart in the
   database and the user email has not changed. This function also checks
   if the token is being used within a certain period, depending on the
-  context. The default context supported by this function is
-  "confirm", for account confirmation emails. For verifying requests to change the email,
+  context. The default contexts supported by this function are either
+  "confirm", for email confirmation emails, and "session",
+  for session tokens. For verifying requests to change the email,
   see `verify_change_email_token_query/2`.
   """
   def verify_email_token_query(token, context) do
@@ -125,6 +126,7 @@ defmodule Tickex.Accounts.UserToken do
   end
 
   defp days_for_context("confirm"), do: @confirm_validity_in_days
+  defp days_for_context("session"), do: @session_validity_in_days
 
   @doc """
   Checks if the token is valid and returns its underlying lookup query.
