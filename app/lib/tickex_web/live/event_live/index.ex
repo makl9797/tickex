@@ -53,7 +53,7 @@ defmodule TickexWeb.EventLive.Index do
   end
 
   @impl true
-  def handle_event("wallet-disconnected", params, socket) do
+  def handle_event("wallet-disconnected", _params, socket) do
     socket = assign(socket, current_wallet_address: nil)
     {:noreply, socket}
   end
