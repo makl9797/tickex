@@ -21,28 +21,22 @@ import "phoenix_html"
 import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
-import { ethers } from "ethers"
+import { Metamask } from "./hooks/metamask"
+
+let Hooks = {}
+Hooks.Metamask = Metamask
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken } })
+
+let liveSocket = new LiveSocket("/live", Socket, {
+    params: { _csrf_token: csrfToken },
+    hooks: Hooks
+});
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
-
-const web3Provider = new ethers.providers.Web3Provider(window.ethereum)
-
-window.addEventListener(`phx:connect-metamask`, (e) => {
-    console.log("Test")
-    web3Provider.provider.request({ method: 'eth_requestAccounts' }).then((accounts) => {
-        if (accounts.length > 0) {
-            signer.getAddress().then((address) => {
-                this.pushEvent("wallet-connected", { public_address: address })
-            });
-        }
-    }, (error) => console.log(error))
-})
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

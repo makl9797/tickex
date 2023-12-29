@@ -9,7 +9,11 @@
       </p>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <.live_component module={TickexWeb.Components.ConnectWalletButton} id="connect-wallet" />
+      <.live_component
+        module={TickexWeb.Components.ConnectWalletButton}
+        id="connect-wallet"
+        current_wallet_address={@current_wallet_address}
+      />
     </div>
   </div>
 </header>
