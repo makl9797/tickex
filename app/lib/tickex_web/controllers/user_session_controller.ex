@@ -12,19 +12,18 @@ defmodule TickexWeb.UserSessionController do
     create(conn, params, "Welcome back!")
   end
 
-  defp create(conn, %{"user" => user_params}, info) do
-    %{"email" => email} = user_params
+  defp create(conn, params, info) do
+    %{"public_address" => wallet_address, "signature" => signature} = params
+    user = Accounts.verify_message_signature(wallet_address, signature)
 
-    if user = Accounts.get_user_by_email(email) do
+    if user do
       conn
       |> put_flash(:info, info)
-      |> UserAuth.log_in_user(user, user_params)
+      |> UserAuth.log_in_user(user, params)
     else
-      # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
-      |> put_flash(:error, "Invalid email")
-      |> put_flash(:email, String.slice(email, 0, 160))
-      |> redirect(to: ~p"/users/log_in")
+      |> put_flash(:error, "Invalid wallet")
+      |> redirect(to: ~p"/events")
     end
   end
 

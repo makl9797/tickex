@@ -28,10 +28,18 @@ defmodule Tickex.Accounts.User do
       submitting the form), this option can be set to `false`.
       Defaults to `true`.
   """
-  def registration_changeset(user, attrs, opts \\ []) do
+
+  # def registration_changeset(user, attrs, opts \\ []) do
+  #   user
+  #   |> cast(attrs, [:email])
+  #   |> validate_email(opts)
+  # end
+
+  def registration_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:email])
-    |> validate_email(opts)
+    |> cast(attrs, [:wallet_address, :nonce, :registration_date])
+    |> validate_required([:wallet_address, :nonce, :registration_date])
+    |> unique_constraint([:wallet_address])
   end
 
   defp validate_email(changeset, opts) do
