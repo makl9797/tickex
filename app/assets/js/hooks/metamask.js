@@ -11,11 +11,11 @@ export const Metamask = {
                 if (accounts.length > 0) {
                     signer = web3Provider.getSigner();
                     signer.getAddress().then((address) => {
-                        this.pushEvent("wallet-connected", { current_wallet_address: address })
+                        this.pushEvent("metamask-connected", { current_wallet_address: address, connected: false })
                     });
                 }
                 else {
-                    this.pushEvent("wallet-disconnected", {})
+                    this.pushEvent("metamask-disconnected", {})
                 }
             })
         })
@@ -36,7 +36,7 @@ export const Metamask = {
             web3Provider.provider.request({ method: 'eth_requestAccounts' }).then((accounts) => {
                 if (accounts.length > 0) {
                     signer.getAddress().then((address) => {
-                        this.pushEvent("wallet-connected", { public_address: address })
+                        this.pushEvent("metamask-connected", { public_address: address, connected: true})
                     });
                 }
             }, (error) => console.log(error))
