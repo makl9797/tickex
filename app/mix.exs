@@ -48,7 +48,8 @@ defmodule Tickex.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, ">= 0.0.0"}
+      {:bandit, ">= 0.0.0"},
+      {:ex_web3_ec_recover, "~> 0.2.0"}
     ]
   end
 

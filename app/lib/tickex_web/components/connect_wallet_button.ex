@@ -1,6 +1,8 @@
 defmodule TickexWeb.Components.ConnectWalletButton do
   use TickexWeb, :live_view
 
+  alias Tickex.Accounts
+
   @impl true
   def mount(_params, _session, socket) do
     socket =
@@ -46,16 +48,25 @@ defmodule TickexWeb.Components.ConnectWalletButton do
 
   @impl true
   def handle_event("metamask-connected", params, socket) do
+    %{"public_address" => wallet_address, "connected" => connected} = params
+    nonce =
+      case Accounts.get_user_by_wallet_address(wallet_address) do
+        nil -> Accounts.generate_account_nonce()
+        user -> user.nonce
+      end
+
     socket =
       socket
-      |> assign(connected: params["connected"], current_wallet_address: params["public_address"])
-      |> push_event("verify-wallet", %{})
+      |> assign(connected: connected, current_wallet_address: wallet_address)
+      |> push_event("verify-wallet", %{nonce: nonce})
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("verify-signature", _params, socket) do
+  def handle_event("verify-signature", params, socket) do
+    %{"public_address" => _wallet_address, "signature" => _signature} = params
+
     {:noreply, socket}
   end
 

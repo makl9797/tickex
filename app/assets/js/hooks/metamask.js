@@ -8,19 +8,13 @@ export const Metamask = {
 
         window.addEventListener('load', async () => {
             web3Provider.listAccounts().then((accounts) => {
-                if (accounts.length > 0) {
-                    signer = web3Provider.getSigner();
-                    signer.getAddress().then((address) => {
-                        this.pushEvent("metamask-connected", { current_wallet_address: address, connected: false })
-                    });
-                }
-                else {
+                if (accounts.length < 1) {
                     this.pushEvent("metamask-disconnected", {})
                 }
             })
         })
 
-        window.addEventListener(`phx:get-current-wallet`, (e) => {
+        window.addEventListener(`phx:verify-wallet`, (e) => {
             signer.getAddress().then((address) => {
                 const message = `You are signing this message to sign in with Tickex. Nonce: ${e.detail.nonce}`
 
