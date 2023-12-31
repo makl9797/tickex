@@ -1,8 +1,6 @@
 defmodule TickexWeb.UserConfirmationInstructionsLive do
   use TickexWeb, :live_view
 
-  alias Tickex.Accounts
-
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
@@ -31,14 +29,7 @@ defmodule TickexWeb.UserConfirmationInstructionsLive do
     {:ok, assign(socket, form: to_form(%{}, as: "user"))}
   end
 
-  def handle_event("send_instructions", %{"user" => %{"email" => email}}, socket) do
-    if user = Accounts.get_user_by_email(email) do
-      Accounts.deliver_user_confirmation_instructions(
-        user,
-        &url(~p"/users/confirm/#{&1}")
-      )
-    end
-
+  def handle_event("send_instructions", _params, socket) do
     info =
       "If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly."
 

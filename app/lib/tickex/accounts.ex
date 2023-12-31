@@ -169,7 +169,7 @@ defmodule Tickex.Accounts do
 
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, validate_email: false)
+    User.registration_changeset(user, attrs)
   end
 
   ## Settings
