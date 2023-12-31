@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.ts --network hardhat",
+    "full-deploy": "npm run compile && npm run test && npm run deploy"
+  },
   "name": "hardhat-project",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
