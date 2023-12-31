@@ -6,7 +6,6 @@ defmodule TickexWeb.EventLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, current_wallet_address: nil)
     {:ok, stream(socket, :events, Events.list_events())}
   end
 
@@ -44,17 +43,5 @@ defmodule TickexWeb.EventLive.Index do
     {:ok, _} = Events.delete_event(event)
 
     {:noreply, stream_delete(socket, :events, event)}
-  end
-
-  @impl true
-  def handle_event("wallet-connected", params, socket) do
-    socket = assign(socket, current_wallet_address: params["public_address"])
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("wallet-disconnected", params, socket) do
-    socket = assign(socket, current_wallet_address: nil)
-    {:noreply, socket}
   end
 end

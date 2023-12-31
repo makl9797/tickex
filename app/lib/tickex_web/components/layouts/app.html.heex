@@ -9,11 +9,7 @@
       </p>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <.live_component
-        module={TickexWeb.Components.ConnectWalletButton}
-        id="connect-wallet"
-        current_wallet_address={@current_wallet_address}
-      />
+      <%= live_render(@socket, TickexWeb.Components.ConnectWalletButton, id: "wallet") %>
     </div>
   </div>
 </header>
