@@ -91,7 +91,7 @@ defmodule Tickex.Accounts do
     }
 
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -110,7 +110,7 @@ defmodule Tickex.Accounts do
   """
   def verify_message_signature(wallet_address, signature) do
     with user = %User{} <- get_user_by_wallet_address(wallet_address) do
-      message = "You are signing this message to sign in with Dora. Nonce: #{user.nonce}"
+      message = "You are signing this message to sign in with Tickex. Nonce: #{user.nonce}"
 
       signing_address = ExWeb3EcRecover.recover_personal_signature(message, signature)
 
@@ -152,6 +152,8 @@ defmodule Tickex.Accounts do
 
   """
   def register_user(attrs) do
+    attrs = Map.put_new(attrs, :registration_date, NaiveDateTime.local_now())
+
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()

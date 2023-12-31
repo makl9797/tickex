@@ -42,6 +42,12 @@ defmodule Tickex.Accounts.User do
     |> unique_constraint([:wallet_address])
   end
 
+  def update_changeset(user, attrs \\ %{}) do
+    user
+    |> cast(attrs, [:nonce, :name, :email])
+    |> validate_required([:nonce])
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])

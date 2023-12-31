@@ -23,7 +23,7 @@ defmodule TickexWeb.UserSessionController do
     else
       conn
       |> put_flash(:error, "Invalid wallet")
-      |> redirect(to: ~p"/events")
+      |> redirect(to: ~p"/")
     end
   end
 

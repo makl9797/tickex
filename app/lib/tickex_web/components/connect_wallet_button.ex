@@ -22,6 +22,10 @@ defmodule TickexWeb.Components.ConnectWalletButton do
     ~H"""
     <div id="metamask-button" phx-hook="Metamask">
       <div :if={@connected} class="flex items-center space-x-4">
+        <.form for={%{}} action={~p"/auth"} as={:user} phx-submit="verify-signature" phx-trigger-action={@verify_signature}>
+          <.input type="hidden" name="public_address" value={@current_wallet_address} />
+          <.input type="hidden" name="signature" value={@signature} />
+        </.form>
         <div class="bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-lg">
           <%= short_wallet_address(@current_wallet_address) %>
         </div>
@@ -49,6 +53,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
   @impl true
   def handle_event("metamask-connected", params, socket) do
     %{"public_address" => wallet_address, "connected" => connected} = params
+
     nonce =
       case Accounts.get_user_by_wallet_address(wallet_address) do
         nil -> Accounts.generate_account_nonce()
@@ -57,15 +62,23 @@ defmodule TickexWeb.Components.ConnectWalletButton do
 
     socket =
       socket
-      |> assign(connected: connected, current_wallet_address: wallet_address)
+      |> assign(connected: connected, current_wallet_address: wallet_address, nonce: nonce)
       |> push_event("verify-wallet", %{nonce: nonce})
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("verify-signature", params, socket) do
-    %{"public_address" => _wallet_address, "signature" => _signature} = params
+  def handle_event("verify-signature", %{"signature" => signature}, socket) do
+    %{current_wallet_address: wallet_address, nonce: nonce} = socket.assigns
+    Accounts.register_user(%{wallet_address: wallet_address, nonce: nonce})
+
+    socket =
+      assign(socket,
+        signature: signature,
+        verify_signature: true,
+        nonce: nil
+      )
 
     {:noreply, socket}
   end
