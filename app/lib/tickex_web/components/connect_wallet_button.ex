@@ -2,37 +2,66 @@ defmodule TickexWeb.Components.ConnectWalletButton do
   use TickexWeb, :live_view
 
   alias Tickex.Accounts
+  alias Tickex.Accounts.User
+
+  on_mount({TickexWeb.UserAuth, :mount_current_user})
 
   @impl true
   def mount(_params, _session, socket) do
     socket =
-      assign(
-        socket,
-        connected: false,
-        current_wallet_address: nil,
+      socket
+      |> assign_current_user()
+      |> assign(
         signature: nil,
-        verify_signature: false
+        verify_signature: false,
+        logout: false
       )
 
     {:ok, socket}
+  end
+
+  defp assign_current_user(%{assigns: %{current_user: %User{} = current_user}} = socket) do
+    assign(socket,
+      connected: true,
+      current_wallet_address: current_user.wallet_address,
+      logged_in: true
+    )
+  end
+
+  defp assign_current_user(socket) do
+    assign(
+      socket,
+      connected: false,
+      current_wallet_address: nil,
+      logged_in: false
+    )
   end
 
   @impl true
   def render(assigns) do
     ~H"""
     <div id="metamask-button" phx-hook="Metamask">
-      <div :if={@connected} class="flex items-center space-x-4">
+      <div :if={@connected}>
         <.form for={%{}} action={~p"/auth"} as={:user} phx-submit="verify-signature" phx-trigger-action={@verify_signature}>
           <.input type="hidden" name="public_address" value={@current_wallet_address} />
           <.input type="hidden" name="signature" value={@signature} />
         </.form>
+        <div :if={@logged_in} class="flex items-center space-x-4">
         <div class="bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-lg">
           <%= short_wallet_address(@current_wallet_address) %>
         </div>
-
-        <button phx-click="logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-          Logout
-        </button>
+        <.form
+          for={%{}}
+          action={~p"/logout"}
+          method="delete"
+          as={:user}
+          phx-trigger-action={@logout}
+        >
+          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+            Logout
+          </button>
+        </.form>
+        </div>
       </div>
       <button
         :if={!@connected}
@@ -52,7 +81,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
 
   @impl true
   def handle_event("metamask-connected", params, socket) do
-    %{"public_address" => wallet_address, "connected" => connected} = params
+    %{"public_address" => wallet_address} = params
 
     nonce =
       case Accounts.get_user_by_wallet_address(wallet_address) do
@@ -62,7 +91,11 @@ defmodule TickexWeb.Components.ConnectWalletButton do
 
     socket =
       socket
-      |> assign(connected: connected, current_wallet_address: wallet_address, nonce: nonce)
+      |> assign(
+        current_wallet_address: wallet_address,
+        nonce: nonce,
+        logout: false
+      )
       |> push_event("verify-wallet", %{nonce: nonce})
 
     {:noreply, socket}
@@ -71,13 +104,28 @@ defmodule TickexWeb.Components.ConnectWalletButton do
   @impl true
   def handle_event("verify-signature", %{"signature" => signature}, socket) do
     %{current_wallet_address: wallet_address, nonce: nonce} = socket.assigns
+
     Accounts.register_user(%{wallet_address: wallet_address, nonce: nonce})
 
     socket =
       assign(socket,
+        connected: true,
         signature: signature,
         verify_signature: true,
-        nonce: nil
+        nonce: nil,
+        logged_in: true
+      )
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("signature-failed", _params, socket) do
+    socket =
+      assign(socket,
+        connected: false,
+        current_wallet_address: nil,
+        logged_in: false
       )
 
     {:noreply, socket}
@@ -85,7 +133,10 @@ defmodule TickexWeb.Components.ConnectWalletButton do
 
   @impl true
   def handle_event("metamask-disconnected", _params, socket) do
-    socket = assign(socket, connected: false, current_wallet_address: nil)
+    socket =
+      socket
+      |> assign(logout: true, logged_in: false)
+
     {:noreply, socket}
   end
 

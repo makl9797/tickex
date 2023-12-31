@@ -14,7 +14,7 @@ defmodule Tickex.Repo.Migrations.CreateUsersAuthTables do
       timestamps(type: :utc_datetime)
     end
 
-    create unique_index(:users, [:email, :id, :wallet_address])
+    create unique_index(:users, [:wallet_address])
 
     create table(:users_tokens, primary_key: false) do
       add :id, :binary_id, primary_key: true
