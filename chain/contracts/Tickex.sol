@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.20;
 
 contract Tickex {
     struct Event {
@@ -27,21 +27,30 @@ contract Tickex {
         _;
     }
 
-    function createEvent(string memory title, string memory description, uint256 ticketAnzahl, uint256 ticketPreis) public onlyOwner {
-        events.push(Event(
-            nextEventId,
-            title,
-            description,
-            ticketAnzahl,
-            ticketPreis,
-            msg.sender,
-            0
-        ));
+    function createEvent(
+        string memory title,
+        string memory description,
+        uint256 ticketAnzahl,
+        uint256 ticketPreis
+    ) public onlyOwner {
+        events.push(
+            Event(
+                nextEventId,
+                title,
+                description,
+                ticketAnzahl,
+                ticketPreis,
+                msg.sender,
+                0
+            )
+        );
         emit EventCreated(nextEventId, title, msg.sender);
         nextEventId++;
     }
 
-    function getEventDetails(uint256 eventId) public view returns (Event memory) {
+    function getEventDetails(
+        uint256 eventId
+    ) public view returns (Event memory) {
         require(eventId < events.length, "Event does not exist.");
         return events[eventId];
     }

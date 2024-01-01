@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
@@ -12,15 +12,12 @@ contract TicketStorage is Initializable {
 
     Ticket[] public tickets;
 
-    function initialize() public initializer {
-    }
+    function initialize() public initializer {}
 
     function createTicket(uint256 eventId, address owner) external {
-        tickets.push(Ticket({
-            eventId: eventId,
-            owner: owner,
-            isRedeemed: false
-        }));
+        tickets.push(
+            Ticket({eventId: eventId, owner: owner, isRedeemed: false})
+        );
     }
 
     function redeemTicket(uint256 ticketId) external {
