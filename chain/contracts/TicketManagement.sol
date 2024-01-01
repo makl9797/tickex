@@ -3,16 +3,12 @@ pragma solidity ^0.8.20;
 
 import "./EventStorage.sol";
 import "./TicketStorage.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract TicketManagement is Initializable {
+contract TicketManagement {
     EventStorage private eventStorage;
     TicketStorage private ticketStorage;
 
-    function initialize(
-        address _eventStorageAddress,
-        address _ticketStorageAddress
-    ) public initializer {
+    constructor(address _eventStorageAddress, address _ticketStorageAddress) {
         eventStorage = EventStorage(_eventStorageAddress);
         ticketStorage = TicketStorage(_ticketStorageAddress);
     }
@@ -28,15 +24,11 @@ contract TicketManagement is Initializable {
         );
 
         ticketStorage.createTicket(eventId, msg.sender);
-
-        // Reduzieren Sie die Anzahl der verfügbaren Tickets
         eventStorage.updateEvent(
             eventId,
             eventObject.ticketPrice,
             eventObject.ticketsAvailable - 1
         );
-
-        // Überweisung des Geldes an den Eventersteller
         payable(eventObject.owner).transfer(msg.value);
     }
 }

@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-
-contract TicketStorage is Initializable {
+contract TicketStorage {
     struct Ticket {
         uint256 eventId;
         address owner;
@@ -11,8 +9,6 @@ contract TicketStorage is Initializable {
     }
 
     Ticket[] public tickets;
-
-    function initialize() public initializer {}
 
     function createTicket(uint256 eventId, address owner) external {
         tickets.push(

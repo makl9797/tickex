@@ -3,20 +3,14 @@ pragma solidity ^0.8.20;
 
 import "./EventStorage.sol";
 import "./TicketStorage.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract EventManagement is Initializable, OwnableUpgradeable {
+contract EventManagement {
     EventStorage private eventStorage;
     TicketStorage private ticketStorage;
 
-    function initialize(
-        address _eventStorageAddress,
-        address _ticketStorageAddress
-    ) public initializer {
+    constructor(address _eventStorageAddress, address _ticketStorageAddress) {
         eventStorage = EventStorage(_eventStorageAddress);
         ticketStorage = TicketStorage(_ticketStorageAddress);
-        __Ownable_init();
     }
 
     function createEvent(uint256 ticketPrice, uint256 ticketsAvailable) public {
