@@ -15,44 +15,43 @@ describe("TicketManagement Contract", function () {
     const TicketManagement = await ethers.getContractFactory("TicketManagement");
     const ticketManagement = await TicketManagement.deploy(eventStorage.target, ticketStorage.target);
 
+    const ticketPrice = ethers.parseEther("0.1");
+    const ticketsAvailable = 100;
+    await eventStorage.createEvent(ticketPrice, ticketsAvailable, owner.address);
+
     return { ticketManagement, eventStorage, ticketStorage, owner, user1 };
   }
 
   describe("Ticket Purchase", function () {
     it("should allow users to buy tickets for an event", async function () {
-      const { ticketManagement, eventStorage, owner, user1 } = await loadFixture(deployTicketManagementFixture);
+      const { ticketManagement, owner, user1 } = await loadFixture(deployTicketManagementFixture);
+      const eventId = 0;
+      const ticketPrice = ethers.parseEther("0.1");
 
-      // Erstelle ein Event
-      await eventStorage.connect(owner).createEvent(100, 1000);
-
-      // Kaufe ein Ticket
-      await expect(ticketManagement.connect(user1).buyTicket(0, { value: 100 }))
-        .to.emit(ticketManagement, "TicketPurchased")
-        .withArgs(0, user1.address);
+      await expect(ticketManagement.connect(user1).buyTicket(eventId, { value: ticketPrice }))
+        .to.changeEtherBalances([user1, owner], [-ticketPrice, ticketPrice]); 
     });
 
-    it("should not allow ticket purchases if the event is sold out", async function () {
+    it("should not allow ticket purchases if no tickets are available", async function () {
       const { ticketManagement, eventStorage, owner, user1 } = await loadFixture(deployTicketManagementFixture);
+      const eventId = 1;
+      const ticketPrice = ethers.parseEther("0.1");
 
-      // Erstelle ein Event mit 0 Tickets
-      await eventStorage.connect(owner).createEvent(100, 0);
+      await eventStorage.createEvent(ticketPrice, 0, owner.address);
 
-      // Versuche, ein Ticket zu kaufen
-      await expect(ticketManagement.connect(user1).buyTicket(0, { value: 100 }))
+      await expect(ticketManagement.connect(user1).buyTicket(eventId, { value: ticketPrice }))
         .to.be.revertedWith("No tickets available.");
     });
 
     it("should not allow ticket purchases with incorrect payment", async function () {
-      const { ticketManagement, eventStorage, owner, user1 } = await loadFixture(deployTicketManagementFixture);
+      const { ticketManagement, owner, user1 } = await loadFixture(deployTicketManagementFixture);
+      const eventId = 0;
+      const incorrectTicketPrice = ethers.parseEther("0.05");
 
-      // Erstelle ein Event
-      await eventStorage.connect(owner).createEvent(100, 1000);
-
-      // Versuche, ein Ticket mit falschem Betrag zu kaufen
-      await expect(ticketManagement.connect(user1).buyTicket(0, { value: 50 }))
+      await expect(ticketManagement.connect(user1).buyTicket(eventId, { value: incorrectTicketPrice }))
         .to.be.revertedWith("Incorrect ticket price.");
     });
   });
 
-  // Weitere Tests können hier hinzugefügt werden...
+  
 });

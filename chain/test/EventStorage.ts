@@ -53,5 +53,5 @@ describe("EventStorage Contract", function () {
     });
   });
 
-  // Weitere Tests können hier hinzugefügt werden...
+  
 });
