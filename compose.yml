@@ -23,6 +23,7 @@ services:
       target: base
     stdin_open: true
     tty: true
+    env_file: ./chain/.env
     ports:
       - "8545:8545"
     volumes:

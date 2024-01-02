@@ -1,6 +1,9 @@
 import { ethers } from "hardhat";
 
 async function main() {
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+
     const EventStorage = await ethers.getContractFactory("EventStorage");
     const TicketStorage = await ethers.getContractFactory("TicketStorage");
     const EventManagement = await ethers.getContractFactory("EventManagement");
