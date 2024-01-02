@@ -1,5 +1,5 @@
 defmodule Tickex.Contracts.EventManagement do
   use Ethers.Contract,
     abi_file: "priv/contracts/EventManagement.json",
-    default_address: "0x3bc8AaA88d3ABaf359AaDAe4C9112187f8E62ea0"
+    default_address: "0x91cA0DaA14c1aae433de956d4E10cd60d36E995a"
 end
