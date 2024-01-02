@@ -1,9 +1,9 @@
 defmodule Mix.Tasks.ImportAbi do
   use Mix.Task
-  @shortdoc "Generates Elixir Contract modules based on ABI JSON filenames in 'priv/contracts'."
+  @shortdoc "Generates Elixir Contract modules based on ABI JSON filenames in 'assets/abis'."
 
   @moduledoc """
-  This task generates Elixir modules for interacting with smart contracts based on ABI JSON filenames located in 'priv/contracts'.
+  This task generates Elixir modules for interacting with smart contracts based on ABI JSON filenames located in 'assets/abis'.
 
   ## Usage
 
@@ -20,7 +20,7 @@ defmodule Mix.Tasks.ImportAbi do
   end
 
   defp get_contract_names_from_abi_files do
-    Path.wildcard("priv/contracts/*.json")
+    Path.wildcard("assets/abis/*.json")
     |> Enum.map(&Path.basename(&1, ".json"))
   end
 
@@ -30,7 +30,7 @@ defmodule Mix.Tasks.ImportAbi do
     content = """
     defmodule Tickex.Contracts.#{contract_name} do
       use Ethers.Contract,
-        abi_file: "priv/contracts/#{contract_name}.json",
+        abi_file: "assets/abis/#{contract_name}.json",
         default_address: "<Fill in contract address>"
     end
     """

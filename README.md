@@ -120,8 +120,7 @@ To deploy the contracts to the Mumbai Testnet, follow these steps:
    - Note down the contract addresses output by the deployment script.
 
 3. **Copy ABI JSON Files**:
-   - Copy the `<ContractName>.json` files from `artifacts/contracts/<ContractName>.sol/` to the `app/priv/contracts` folder.
-   - Create the `app/priv/contracts` folder if it doesn't exist.
+   - Copy the `<ContractName>.json` files from `artifacts/contracts/<ContractName>.sol/` to the `app/assets/abis` folder.
 
 4. **Generate Elixir Contract Modules**:
    - Inside the `app` container, run:
