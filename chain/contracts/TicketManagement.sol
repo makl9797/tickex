@@ -23,12 +23,21 @@ contract TicketManagement {
             "Incorrect ticket price."
         );
 
-        ticketStorage.createTicket(eventId, msg.sender);
+        uint256 ticketNumber = ticketStorage.getTicketCountForEvent(eventId);
+
+        ticketStorage.createTicket(
+            eventId,
+            ticketNumber,
+            eventObject.ticketPrice,
+            msg.sender
+        );
+
         eventStorage.updateEvent(
             eventId,
             eventObject.ticketPrice,
             eventObject.ticketsAvailable - 1
         );
+
         payable(eventObject.owner).transfer(msg.value);
     }
 }
