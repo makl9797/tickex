@@ -1,60 +1,32 @@
 defmodule Mix.Tasks.ImportAbi do
   use Mix.Task
-  @shortdoc "Imports ABI JSONs and generates Elixir Contract modules."
+  @shortdoc "Generates Elixir Contract modules based on ABI JSON filenames in 'priv/contracts'."
 
   @moduledoc """
-  This task imports ABI JSON files from the Hardhat artifacts folder and generates
-  Elixir modules for interacting with smart contracts.
+  This task generates Elixir modules for interacting with smart contracts based on ABI JSON filenames located in 'priv/contracts'.
 
   ## Usage
 
-      mix import_abi --contracts "EventManagement,EventStorage" --artifacts_path "../chain/artifacts"
-
-  ## Parameters
-
-  - `--contracts`: A comma-separated list of contract names for which modules should be generated.
-  - `--artifacts_path`: The relative path to the Hardhat artifacts folder.
+      mix import_abi
   """
 
   @impl true
-  def run(args) do
-    {contracts, artifacts_path} = parse_args(args)
+  def run(_args) do
+    contracts = get_contract_names_from_abi_files()
 
-    Enum.each(contracts, &generate_contract_module(&1, artifacts_path))
+    Enum.each(contracts, &create_contract_module/1)
 
-    IO.puts("Contract modules have been generated and ABI JSONs imported.")
+    IO.puts("Contract modules have been generated.")
   end
 
-  defp parse_args(args) do
-    {opts, _, _} =
-      OptionParser.parse(args,
-        switches: [contracts: :string, artifacts_path: :string]
-      )
-
-    contracts = parse_contracts(opts[:contracts])
-    artifacts_path = opts[:artifacts_path] || raise "Please provide --artifacts_path option."
-
-    {contracts, artifacts_path}
-  end
-
-  defp parse_contracts(nil), do: raise "Please provide --contracts option."
-  defp parse_contracts(contracts) do
-    contracts
-    |> String.replace(["[", "]"], "")
-    |> String.split(",")
-    |> Enum.map(&String.trim/1)
-    |> Enum.reject(&(&1 == ""))
-  end
-
-  defp generate_contract_module(contract_name, artifacts_path) do
-    File.mkdir_p("lib/tickex/contracts")
-    File.mkdir_p("priv/contracts")
-
-    create_contract_module(contract_name)
-    copy_abi_json(contract_name, artifacts_path)
+  defp get_contract_names_from_abi_files do
+    Path.wildcard("priv/contracts/*.json")
+    |> Enum.map(&Path.basename(&1, ".json"))
   end
 
   defp create_contract_module(contract_name) do
+    File.mkdir_p("lib/tickex/contracts")
+
     content = """
     defmodule Tickex.Contracts.#{contract_name} do
       use Ethers.Contract,
@@ -64,16 +36,5 @@ defmodule Mix.Tasks.ImportAbi do
     """
 
     File.write!("lib/tickex/contracts/#{contract_name}.ex", content)
-  end
-
-  defp copy_abi_json(contract_name, artifacts_path) do
-    source_path = Path.join([artifacts_path, "contracts", "#{contract_name}.sol", "#{contract_name}.json"])
-
-    if File.exists?(source_path) do
-      dest_path = "priv/contracts/#{contract_name}.json"
-      File.cp!(source_path, dest_path)
-    else
-      Mix.raise("Could not find ABI JSON for #{contract_name} at #{source_path}")
-    end
   end
 end
