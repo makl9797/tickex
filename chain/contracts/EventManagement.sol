@@ -36,14 +36,10 @@ contract EventManagement {
         eventStorage.updateEvent(eventId, newTicketPrice, newTicketsAvailable);
     }
 
-    function redeemTicket(uint256 ticketId) public onlyOwner {
-        TicketStorage.Ticket memory ticket = ticketStorage.getTicket(ticketId);
-        EventStorage.EventObject memory eventObject = eventStorage
-            .getEventObject(ticket.eventId);
-        require(
-            msg.sender == eventObject.owner,
-            "Only event owner can redeem tickets."
-        );
-        ticketStorage.redeemTicket(ticketId);
+    function redeemTicket(
+        uint256 eventId,
+        uint256 ticketNumber
+    ) public onlyOwner {
+        ticketStorage.redeemTicket(eventId, ticketNumber);
     }
 }
