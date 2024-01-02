@@ -12,6 +12,20 @@ contract EventStorage {
     EventObject[] public events;
     uint256 public currentEventId;
 
+    event EventCreated(
+        uint256 eventId,
+        uint256 ticketPrice,
+        uint256 ticketsAvailable,
+        address indexed owner
+    );
+
+    event EventUpdated(
+        uint256 eventId,
+        uint256 ticketPrice,
+        uint256 ticketsAvailable,
+        address indexed owner
+    );
+
     constructor() {
         currentEventId = 0;
     }
@@ -29,7 +43,7 @@ contract EventStorage {
         });
 
         events.push(eventObject);
-
+        emit EventCreated(currentEventId, ticketPrice, ticketsAvailable, owner);
         currentEventId++;
         return eventObject;
     }
@@ -38,12 +52,19 @@ contract EventStorage {
         uint256 eventId,
         uint256 newTicketPrice,
         uint256 newTicketsAvailable
-    ) external {
-        require(eventId > currentEventId, "Event does not exist.");
+    ) external returns (EventObject memory) {
+        require(eventId < currentEventId, "Event does not exist.");
         EventObject storage eventObject = events[eventId];
 
         eventObject.ticketPrice = newTicketPrice;
         eventObject.ticketsAvailable = newTicketsAvailable;
+        emit EventUpdated(
+            eventId,
+            newTicketPrice,
+            newTicketsAvailable,
+            eventObject.owner
+        );
+        return eventObject;
     }
 
     function getEvent(

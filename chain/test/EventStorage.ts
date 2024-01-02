@@ -37,7 +37,7 @@ describe("EventStorage Contract", function () {
 
       await eventStorage.createEvent(100, 1000);
       await expect(eventStorage.connect(user1).updateEvent(0, 150, 900))
-        .to.be.revertedWith("Only event owner can update the event.");
+        .to.be.revertedWith("You do not own this event.");
     });
   });
 

@@ -1,7 +1,6 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 
 describe("EventManagement Contract", function () {
   async function deployEventManagementFixture() {
@@ -21,10 +20,10 @@ describe("EventManagement Contract", function () {
 
   describe("Event Creation", function () {
     it("should allow the owner to create an event", async function () {
-      const { eventManagement, owner } = await loadFixture(deployEventManagementFixture);
+      const { eventManagement, eventStorage, owner } = await loadFixture(deployEventManagementFixture);
 
       await expect(eventManagement.createEvent(100, 1000))
-        .to.emit(eventManagement, "EventCreated")
+        .to.emit(eventStorage, "EventCreated")
         .withArgs(0, 100, 1000, owner.address);
     });
   });
@@ -36,7 +35,7 @@ describe("EventManagement Contract", function () {
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.updateEvent(0, 150, 900))
         .to.emit(eventStorage, "EventUpdated")
-        .withArgs(0, 150, 900);
+        .withArgs(0, 150, 900, owner.address);
     });
 
     it("should not allow a non-owner to update an event", async function () {
@@ -44,7 +43,7 @@ describe("EventManagement Contract", function () {
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.connect(user1).updateEvent(0, 150, 900))
-        .to.be.revertedWith("Only event owner can update the event.");
+        .to.be.revertedWith("You do not own this event.");
     });
   });
 
@@ -63,7 +62,7 @@ describe("EventManagement Contract", function () {
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.connect(user1).redeemTicket(0))
-        .to.be.revertedWith("Only event owner can redeem tickets.");
+        .to.be.revertedWith("You do not own this event.");
     });
   });
 

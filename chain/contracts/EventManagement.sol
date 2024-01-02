@@ -9,12 +9,6 @@ contract EventManagement {
     TicketStorage private ticketStorage;
 
     address public owner;
-    event EventCreated(
-        uint256 eventId,
-        uint256 ticketPrice,
-        uint256 ticketsAvailable,
-        address indexed owner
-    );
 
     constructor(address _eventStorageAddress, address _ticketStorageAddress) {
         eventStorage = EventStorage(_eventStorageAddress);
@@ -23,7 +17,7 @@ contract EventManagement {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can create events");
+        require(msg.sender == owner, "You do not own this event.");
         _;
     }
 
@@ -31,17 +25,7 @@ contract EventManagement {
         uint256 ticketPrice,
         uint256 ticketsAvailable
     ) public onlyOwner {
-        EventStorage.EventObject memory eventObject = eventStorage.createEvent(
-            ticketPrice,
-            ticketsAvailable,
-            owner
-        );
-        emit EventCreated(
-            eventObject.eventId,
-            ticketPrice,
-            ticketsAvailable,
-            owner
-        );
+        eventStorage.createEvent(ticketPrice, ticketsAvailable, owner);
     }
 
     function updateEvent(
