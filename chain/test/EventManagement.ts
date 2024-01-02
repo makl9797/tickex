@@ -43,7 +43,7 @@ describe("EventManagement Contract", function () {
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.connect(user1).updateEvent(0, 150, 900))
-        .to.be.revertedWith("You do not own this event.");
+        .to.be.revertedWith("Access denied: Not the event owner.");
     });
   });
 
@@ -62,7 +62,7 @@ describe("EventManagement Contract", function () {
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.connect(user1).redeemTicket(0))
-        .to.be.revertedWith("You do not own this event.");
+        .to.be.revertedWith("Access denied: Not the event owner.");
     });
   });
 

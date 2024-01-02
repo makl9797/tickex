@@ -17,7 +17,7 @@ contract EventManagement {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "You do not own this event.");
+        require(msg.sender == owner, "Access denied: Not the event owner.");
         _;
     }
 
@@ -36,7 +36,7 @@ contract EventManagement {
         eventStorage.updateEvent(eventId, newTicketPrice, newTicketsAvailable);
     }
 
-    function redeemTicket(uint256 ticketId) public {
+    function redeemTicket(uint256 ticketId) public onlyOwner {
         TicketStorage.Ticket memory ticket = ticketStorage.getTicket(ticketId);
         EventStorage.EventObject memory eventObject = eventStorage.getEvent(
             ticket.eventId
