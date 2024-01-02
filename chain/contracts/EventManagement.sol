@@ -38,7 +38,7 @@ contract EventManagement {
 
     function redeemTicket(uint256 ticketId) public onlyOwner {
         TicketStorage.Ticket memory ticket = ticketStorage.getTicket(ticketId);
-        EventStorage.EventObject memory eventObject = eventStorage.getEvent(
+        EventStorage.EventObject memory eventObject = eventStorage.getEventObject(
             ticket.eventId
         );
         require(

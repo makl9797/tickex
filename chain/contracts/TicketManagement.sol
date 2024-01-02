@@ -14,7 +14,7 @@ contract TicketManagement {
     }
 
     function buyTicket(uint256 eventId) public payable {
-        EventStorage.EventObject memory eventObject = eventStorage.getEvent(
+        EventStorage.EventObject memory eventObject = eventStorage.getEventObject(
             eventId
         );
         require(eventObject.ticketsAvailable > 0, "No tickets available.");

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "hardhat/console.sol";
+
 contract EventStorage {
     struct EventObject {
         uint256 eventId;
@@ -67,10 +69,10 @@ contract EventStorage {
         return eventObject;
     }
 
-    function getEvent(
+    function getEventObject(
         uint256 eventId
     ) external view returns (EventObject memory) {
-        require(eventId > currentEventId, "Event does not exist.");
+        require(eventId < currentEventId, "Event does not exist.");
         return events[eventId];
     }
 }

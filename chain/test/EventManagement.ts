@@ -39,7 +39,7 @@ describe("EventManagement Contract", function () {
     });
 
     it("should not allow a non-owner to update an event", async function () {
-      const { eventManagement, eventStorage, owner, user1 } = await loadFixture(deployEventManagementFixture);
+      const { eventManagement, user1 } = await loadFixture(deployEventManagementFixture);
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.connect(user1).updateEvent(0, 150, 900))
@@ -49,7 +49,7 @@ describe("EventManagement Contract", function () {
 
   describe("Ticket Redemption", function () {
     it("should allow ticket redemption by the event owner", async function () {
-      const { eventManagement, ticketStorage, owner } = await loadFixture(deployEventManagementFixture);
+      const { eventManagement, ticketStorage } = await loadFixture(deployEventManagementFixture);
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.redeemTicket(0))
@@ -58,7 +58,7 @@ describe("EventManagement Contract", function () {
     });
 
     it("should not allow ticket redemption by a non-owner", async function () {
-      const { eventManagement, ticketStorage, owner, user1 } = await loadFixture(deployEventManagementFixture);
+      const { eventManagement, user1 } = await loadFixture(deployEventManagementFixture);
 
       await eventManagement.createEvent(100, 1000);
       await expect(eventManagement.connect(user1).redeemTicket(0))

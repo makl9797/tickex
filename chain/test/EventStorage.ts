@@ -5,7 +5,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 describe("EventStorage Contract", function () {
   async function deployEventStorageFixture() {
     const [owner, user1] = await ethers.getSigners();
-    
+
     const EventStorage = await ethers.getContractFactory("EventStorage");
     const eventStorage = await EventStorage.deploy();
 
@@ -16,28 +16,19 @@ describe("EventStorage Contract", function () {
     it("should allow users to create an event", async function () {
       const { eventStorage, owner } = await loadFixture(deployEventStorageFixture);
 
-      await expect(eventStorage.createEvent(100, 1000))
+      await expect(eventStorage.createEvent(100, 1000, owner.address))
         .to.emit(eventStorage, "EventCreated")
-        .withArgs(0, owner.address, 100, 1000);
+        .withArgs(0, 100, 1000, owner.address);
     });
   });
 
   describe("Event Update", function () {
     it("should allow the event owner to update the event", async function () {
       const { eventStorage, owner } = await loadFixture(deployEventStorageFixture);
-
-      await eventStorage.createEvent(100, 1000);
+      await eventStorage.createEvent(100, 1000, owner.address);
       await expect(eventStorage.updateEvent(0, 150, 900))
         .to.emit(eventStorage, "EventUpdated")
-        .withArgs(0, 150, 900);
-    });
-
-    it("should not allow a non-owner to update the event", async function () {
-      const { eventStorage, owner, user1 } = await loadFixture(deployEventStorageFixture);
-
-      await eventStorage.createEvent(100, 1000);
-      await expect(eventStorage.connect(user1).updateEvent(0, 150, 900))
-        .to.be.revertedWith("Access denied: Not the event owner.");
+        .withArgs(0, 150, 900, owner.address);
     });
   });
 
@@ -45,8 +36,9 @@ describe("EventStorage Contract", function () {
     it("should return the correct event details", async function () {
       const { eventStorage, owner } = await loadFixture(deployEventStorageFixture);
 
-      await eventStorage.createEvent(100, 1000);
-      const event = await eventStorage.getEvent(0);
+      await eventStorage.createEvent(100, 1000, owner.address);
+
+      const event = await eventStorage.getEventObject(0);
 
       expect(event.owner).to.equal(owner.address);
       expect(event.ticketPrice).to.equal(100);
@@ -56,7 +48,7 @@ describe("EventStorage Contract", function () {
     it("should revert if the event does not exist", async function () {
       const { eventStorage } = await loadFixture(deployEventStorageFixture);
 
-      await expect(eventStorage.getEvent(999))
+      await expect(eventStorage.getEventObject(999))
         .to.be.revertedWith("Event does not exist.");
     });
   });
