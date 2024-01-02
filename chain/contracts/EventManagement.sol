@@ -8,38 +8,30 @@ contract EventManagement {
     EventStorage private eventStorage;
     TicketStorage private ticketStorage;
 
-    address public owner;
-
     constructor(address _eventStorageAddress, address _ticketStorageAddress) {
         eventStorage = EventStorage(_eventStorageAddress);
         ticketStorage = TicketStorage(_ticketStorageAddress);
-        owner = msg.sender;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Access denied: Not the event owner.");
-        _;
-    }
-
-    function createEvent(
-        uint256 ticketPrice,
-        uint256 ticketsAvailable
-    ) public onlyOwner {
-        eventStorage.createEvent(ticketPrice, ticketsAvailable, owner);
+    function createEvent(uint256 ticketPrice, uint256 ticketsAvailable) public {
+        eventStorage.createEvent(ticketPrice, ticketsAvailable, msg.sender);
     }
 
     function updateEvent(
         uint256 eventId,
         uint256 newTicketPrice,
         uint256 newTicketsAvailable
-    ) public onlyOwner {
+    ) public {
+        EventStorage.EventObject memory eventObject = eventStorage
+            .getEventObject(eventId);
+        require(eventObject.owner == msg.sender, "Not the event owner");
         eventStorage.updateEvent(eventId, newTicketPrice, newTicketsAvailable);
     }
 
-    function redeemTicket(
-        uint256 eventId,
-        uint256 ticketNumber
-    ) public onlyOwner {
+    function redeemTicket(uint256 eventId, uint256 ticketNumber) public {
+        EventStorage.EventObject memory eventObject = eventStorage
+            .getEventObject(eventId);
+        require(eventObject.owner == msg.sender, "Not the event owner");
         ticketStorage.redeemTicket(eventId, ticketNumber);
     }
 }
