@@ -1,0 +1,27 @@
+<.header>
+  Ticket <%= @ticket.id %>
+  <:subtitle>This is a ticket record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/tickets/#{@ticket}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit ticket</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Purchase date"><%= @ticket.purchase_date %></:item>
+  <:item title="Redeemed"><%= @ticket.redeemed %></:item>
+</.list>
+
+<.back navigate={~p"/tickets"}>Back to tickets</.back>
+
+<.modal :if={@live_action == :edit} id="ticket-modal" show on_cancel={JS.patch(~p"/tickets/#{@ticket}")}>
+  <.live_component
+    module={TickexWeb.TicketLive.FormComponent}
+    id={@ticket.id}
+    title={@page_title}
+    action={@live_action}
+    ticket={@ticket}
+    patch={~p"/tickets/#{@ticket}"}
+  />
+</.modal>

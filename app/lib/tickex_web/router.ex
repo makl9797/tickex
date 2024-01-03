@@ -27,6 +27,13 @@ defmodule TickexWeb.Router do
 
     live("/events/:id", EventLive.Show, :show)
     live("/events/:id/show/edit", EventLive.Show, :edit)
+
+    live("/tickets", TicketLive.Index, :index)
+    live("/tickets/new", TicketLive.Index, :new)
+    live("/tickets/:id/edit", TicketLive.Index, :edit)
+
+    live("/tickets/:id", TicketLive.Show, :show)
+    live("/tickets/:id/show/edit", TicketLive.Show, :edit)
   end
 
   # Other scopes may use custom stacks.
