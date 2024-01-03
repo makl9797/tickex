@@ -44,4 +44,13 @@ defmodule TickexWeb.EventLive.Index do
 
     {:noreply, stream_delete(socket, :events, event)}
   end
+
+  @impl true
+  def handle_event("create-event", _params, socket) do
+    socket =
+      socket
+      |> push_event("create-event", %{ticketPrice: 0.01, ticketsAvailable: 100})
+
+    {:noreply, socket}
+  end
 end

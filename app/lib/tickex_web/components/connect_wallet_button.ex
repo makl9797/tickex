@@ -47,20 +47,14 @@ defmodule TickexWeb.Components.ConnectWalletButton do
           <.input type="hidden" name="signature" value={@signature} />
         </.form>
         <div :if={@logged_in} class="flex items-center space-x-4">
-        <div class="bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-lg">
-          <%= short_wallet_address(@current_wallet_address) %>
-        </div>
-        <.form
-          for={%{}}
-          action={~p"/logout"}
-          method="delete"
-          as={:user}
-          phx-trigger-action={@logout}
-        >
-          <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-            Logout
-          </button>
-        </.form>
+          <div class="bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-lg">
+            <%= short_wallet_address(@current_wallet_address) %>
+          </div>
+          <.form for={%{}} action={~p"/logout"} method="delete" as={:user} phx-trigger-action={@logout}>
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+              Logout
+            </button>
+          </.form>
         </div>
       </div>
       <button
