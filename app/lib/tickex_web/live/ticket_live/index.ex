@@ -6,7 +6,7 @@ defmodule TickexWeb.TicketLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :tickets, Tickets.list_tickets())}
+    {:ok, stream(socket, :tickets, Events.list_tickets())}
   end
 
   @impl true
@@ -17,7 +17,7 @@ defmodule TickexWeb.TicketLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Ticket")
-    |> assign(:ticket, Tickets.get_ticket!(id))
+    |> assign(:ticket, Events.get_ticket!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -39,8 +39,8 @@ defmodule TickexWeb.TicketLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    ticket = Tickets.get_ticket!(id)
-    {:ok, _} = Tickets.delete_ticket(ticket)
+    ticket = Events.get_ticket!(id)
+    {:ok, _} = Events.delete_ticket(ticket)
 
     {:noreply, stream_delete(socket, :tickets, ticket)}
   end

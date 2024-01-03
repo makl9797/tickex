@@ -31,7 +31,7 @@ defmodule TickexWeb.TicketLive.FormComponent do
 
   @impl true
   def update(%{ticket: ticket} = assigns, socket) do
-    changeset = Tickets.change_ticket(ticket)
+    changeset = Events.change_ticket(ticket)
 
     {:ok,
      socket
@@ -43,7 +43,7 @@ defmodule TickexWeb.TicketLive.FormComponent do
   def handle_event("validate", %{"ticket" => ticket_params}, socket) do
     changeset =
       socket.assigns.ticket
-      |> Tickets.change_ticket(ticket_params)
+      |> Events.change_ticket(ticket_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
@@ -54,7 +54,7 @@ defmodule TickexWeb.TicketLive.FormComponent do
   end
 
   defp save_ticket(socket, :edit, ticket_params) do
-    case Tickets.update_ticket(socket.assigns.ticket, ticket_params) do
+    case Events.update_ticket(socket.assigns.ticket, ticket_params) do
       {:ok, ticket} ->
         notify_parent({:saved, ticket})
 
@@ -69,7 +69,7 @@ defmodule TickexWeb.TicketLive.FormComponent do
   end
 
   defp save_ticket(socket, :new, ticket_params) do
-    case Tickets.create_ticket(ticket_params) do
+    case Events.create_ticket(ticket_params) do
       {:ok, ticket} ->
         notify_parent({:saved, ticket})
 

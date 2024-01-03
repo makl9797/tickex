@@ -13,7 +13,7 @@ defmodule TickexWeb.TicketLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:ticket, Tickets.get_ticket!(id))}
+     |> assign(:ticket, Events.get_ticket!(id))}
   end
 
   defp page_title(:show), do: "Show Ticket"
