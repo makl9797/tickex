@@ -1,6 +1,7 @@
 defmodule TickexWeb.EventLive.Index do
   use TickexWeb, :live_view
 
+  alias Tickex.Contracts
   alias Tickex.Events
   alias Tickex.Events.Event
 
@@ -47,10 +48,16 @@ defmodule TickexWeb.EventLive.Index do
 
   @impl true
   def handle_event("create-event", _params, socket) do
+    event = %Event{ticket_price: 0.1, number_of_tickets: 100}
     socket =
       socket
-      |> push_event("create-event", %{ticketPrice: 0.01, ticketsAvailable: 100})
+      |> Contracts.create_event(event)
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event(event, params, _socket) do
+    Contracts.event_response_handler(event, params)
   end
 end

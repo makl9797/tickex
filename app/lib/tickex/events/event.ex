@@ -12,7 +12,7 @@ defmodule Tickex.Events.Event do
     field(:creation_date, :utc_datetime)
 
     # Contract fields
-    field(:contract_event_id)
+    field(:contract_event_id, :integer)
     field(:ticket_price, :float)
     field(:number_of_tickets, :integer)
 
