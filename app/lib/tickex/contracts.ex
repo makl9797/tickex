@@ -1,8 +1,10 @@
 defmodule Tickex.Contracts do
   @moduledoc false
+  use Tickex.Contracts.EventListener, delay: 1000, max_attempts: 15
 
   import Phoenix.LiveView
 
+  alias Tickex.Accounts.User
   alias Tickex.Contracts.{EventStorage, TicketStorage}
   alias Tickex.Events.Event
 
@@ -23,8 +25,14 @@ defmodule Tickex.Contracts do
   end
 
   def create_event(socket, event) do
-    %Event{ticket_price: ticket_price, number_of_tickets: tickets_available} = event
-    start_event_listener(EventStorage.EventFilters.event_created(nil), &event_created/1)
+    %Event{
+      ticket_price: ticket_price,
+      number_of_tickets: tickets_available,
+      owner: %User{wallet_address: wallet_address}
+    } = event
+
+    filter = EventStorage.EventFilters.event_created(wallet_address)
+    subscribe("event_created", filter)
 
     socket
     |> push_event("create-event", %{
@@ -33,28 +41,26 @@ defmodule Tickex.Contracts do
     })
   end
 
-  defp event_created({:ok, []}), do: :continue
-
-  defp event_created({:ok, [event]}) do
+  @impl EventListener
+  def handle_contract_event({:ok, [event]}, "event_created") do
     IO.inspect(event)
     :halt
   end
 
-  def start_event_listener(filter_fun, handle_fun) do
-    Task.start(fn -> listen_for_event(filter_fun, handle_fun) end)
+  def handle_contract_event({:ok, [event]}, "event_updated") do
+    IO.inspect(event)
+    :halt
   end
 
-  defp listen_for_event(:continue, filter_fun, handle_fun) do
-    :timer.sleep(1000)
-    listen_for_event(filter_fun, handle_fun)
+  def handle_contract_event({:ok, [event]}, "ticket_redeemed") do
+    IO.inspect(event)
+    :halt
   end
 
-  defp listen_for_event(:halt, _filter_fun, _handle_fun), do: :ok
-
-  defp listen_for_event(filter_fun, handle_fun) do
-    filter_fun
-    |> Ethers.get_logs()
-    |> handle_fun.()
-    |> listen_for_event(filter_fun, handle_fun)
+  def handle_contract_event({:ok, [event]}, "ticket_created") do
+    IO.inspect(event)
+    :halt
   end
+
+  def handle_contract_event(_response, _event_name), do: IO.inspect(:continue)
 end
