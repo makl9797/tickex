@@ -21,8 +21,8 @@ defmodule Tickex.Events.Event do
     timestamps(type: :utc_datetime)
   end
 
-  @required_fields ~w[title creation_date contract_event_id ticket_price number_of_tickets]a
-  @optional_fields ~w[description location]a
+  @required_fields ~w[title creation_date ticket_price number_of_tickets]a
+  @optional_fields ~w[description location contract_event_id]a
 
   @doc false
   def changeset(event, attrs) do

@@ -51,8 +51,11 @@ defmodule Tickex.Events do
 
   """
   def create_event(attrs \\ %{}) do
+    current_date = NaiveDateTime.utc_now()
+    attrs_with_date = Map.put_new(attrs, "creation_date", current_date)
+
     %Event{}
-    |> Event.changeset(attrs)
+    |> Event.changeset(attrs_with_date)
     |> Repo.insert()
   end
 

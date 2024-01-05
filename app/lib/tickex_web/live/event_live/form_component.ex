@@ -9,14 +9,15 @@ defmodule TickexWeb.EventLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage event records in your database.</:subtitle>
+        <:subtitle>Use this form to create a new event.</:subtitle>
       </.header>
 
       <.simple_form for={@form} id="event-form" phx-target={@myself} phx-change="validate" phx-submit="save">
         <.input field={@form[:title]} type="text" label="Title" />
-        <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:description]} type="textarea" label="Description" />
         <.input field={@form[:location]} type="text" label="Location" />
-        <.input field={@form[:creation_date]} type="datetime-local" label="Creation date" />
+        <.input field={@form[:ticket_price]} type="number" step="0.01" label="Ticket Price" />
+        <.input field={@form[:number_of_tickets]} type="number" label="Number of Tickets" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Event</.button>
         </:actions>
