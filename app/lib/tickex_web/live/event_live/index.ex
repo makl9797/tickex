@@ -38,12 +38,4 @@ defmodule TickexWeb.EventLive.Index do
   def handle_info({TickexWeb.EventLive.FormComponent, {:saved, event}}, socket) do
     {:noreply, stream_insert(socket, :events, event)}
   end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    event = Events.get_event!(id)
-    {:ok, _} = Events.delete_event(event)
-
-    {:noreply, stream_delete(socket, :events, event)}
-  end
 end
