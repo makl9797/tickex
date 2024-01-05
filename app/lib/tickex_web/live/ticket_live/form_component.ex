@@ -12,13 +12,7 @@ defmodule TickexWeb.TicketLive.FormComponent do
         <:subtitle>Use this form to manage ticket records in your database.</:subtitle>
       </.header>
 
-      <.simple_form
-        for={@form}
-        id="ticket-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
+      <.simple_form for={@form} id="ticket-form" phx-target={@myself} phx-change="validate" phx-submit="save">
         <.input field={@form[:purchase_date]} type="datetime-local" label="Purchase date" />
         <.input field={@form[:redeemed]} type="checkbox" label="Redeemed" />
         <:actions>

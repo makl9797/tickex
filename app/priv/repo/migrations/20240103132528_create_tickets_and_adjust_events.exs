@@ -13,6 +13,7 @@ defmodule Tickex.Repo.Migrations.CreateTicketsAndAdjustEvents do
 
     create table(:tickets, primary_key: false) do
       add(:id, :binary_id, primary_key: true)
+      add(:contract_ticket_id, :integer)
       add(:purchase_date, :utc_datetime)
       add(:purchase_price, :float)
       add(:redeemed, :boolean, default: false, null: false)

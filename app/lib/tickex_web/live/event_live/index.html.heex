@@ -8,7 +8,9 @@
 </.header>
 
 <div id="contracts-button" phx-hook="Contracts">
-  <button phx-click="create-event">Test</button>
+  <.button phx-click="create-event">Create-Event Test</.button>
+  <.button phx-click="buy-ticket">Buy-Ticket Test</.button>
+  <.button phx-click="redeem-ticket">Redeem-Ticket Test</.button>
 </div>
 
 <.table id="events" rows={@streams.events} row_click={fn {_id, event} -> JS.navigate(~p"/events/#{event}") end}>

@@ -8,6 +8,7 @@ defmodule Tickex.Events.Ticket do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "tickets" do
+    field(:contract_ticket_id, :integer)
     field(:purchase_price, :float)
     field(:purchase_date, :utc_datetime)
     field(:redeemed, :boolean, default: false)

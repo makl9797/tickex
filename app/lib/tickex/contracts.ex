@@ -6,7 +6,7 @@ defmodule Tickex.Contracts do
 
   alias Tickex.Accounts.User
   alias Tickex.Contracts.{EventStorage, TicketStorage}
-  alias Tickex.Events.Event
+  alias Tickex.Events.{Event, Ticket}
 
   def get_event(event_id) do
     event_id
@@ -39,6 +39,33 @@ defmodule Tickex.Contracts do
       ticketPrice: ticket_price,
       ticketsAvailable: tickets_available
     })
+  end
+
+  def buy_ticket(socket, event) do
+    %Event{
+      contract_event_id: contract_event_id,
+      ticket_price: ticket_price,
+      owner: %User{wallet_address: wallet_address}
+    } = event
+
+    filter = TicketStorage.EventFilters.ticket_created(nil)
+    subscribe("ticket_created", filter)
+
+    socket
+    |> push_event("buy-ticket", %{eventId: contract_event_id, ticketPrice: ticket_price})
+  end
+
+  def redeem_ticket(socket, ticket) do
+    %Ticket{
+      contract_ticket_id: contract_ticket_id,
+      event: %Event{contract_event_id: contract_event_id}
+    } = ticket
+
+    filter = TicketStorage.EventFilters.ticket_redeemed(nil)
+    subscribe("ticket_redeemed", filter)
+
+    socket
+    |> push_event("redeem-ticket", %{eventId: contract_event_id, ticketNumber: contract_ticket_id})
   end
 
   @impl EventListener

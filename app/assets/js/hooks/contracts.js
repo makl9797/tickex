@@ -27,7 +27,7 @@ export const Contracts = {
 
         window.addEventListener(`phx:redeem-ticket`, async (e) => {
             const { eventId, ticketNumber } = e.detail;
-            await ticketManagement.redeemTicket(eventId, ticketNumber);
+            await eventManagement.redeemTicket(eventId, ticketNumber);
         });
     },
 };

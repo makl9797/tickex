@@ -4,7 +4,7 @@ defmodule TickexWeb.EventLive.Index do
   alias Tickex.Accounts.User
   alias Tickex.Contracts
   alias Tickex.Events
-  alias Tickex.Events.Event
+  alias Tickex.Events.{Event, Ticket}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -50,7 +50,7 @@ defmodule TickexWeb.EventLive.Index do
   @impl true
   def handle_event("create-event", _params, socket) do
     event = %Event{
-      ticket_price: 0.1,
+      ticket_price: 0.001,
       number_of_tickets: 100,
       owner: %User{wallet_address: "0x4ad65758D26201B85c179a5f67005905800030EA"}
     }
@@ -58,6 +58,40 @@ defmodule TickexWeb.EventLive.Index do
     socket =
       socket
       |> Contracts.create_event(event)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("buy-ticket", _params, socket) do
+    event = %Event{
+      ticket_price: 0.001,
+      number_of_tickets: 100,
+      contract_event_id: 31,
+      owner: %User{wallet_address: "0x4ad65758D26201B85c179a5f67005905800030EA"}
+    }
+
+    socket =
+      socket
+      |> Contracts.buy_ticket(event)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("redeem-ticket", _params, socket) do
+    event = %Event{
+      ticket_price: 0.001,
+      number_of_tickets: 100,
+      contract_event_id: 31,
+      owner: %User{wallet_address: "0x4ad65758D26201B85c179a5f67005905800030EA"}
+    }
+
+    ticket = %Ticket{event: event, contract_ticket_id: 1}
+
+    socket =
+      socket
+      |> Contracts.redeem_ticket(ticket)
 
     {:noreply, socket}
   end
