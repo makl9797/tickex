@@ -19,7 +19,7 @@ export const Contracts = {
                 const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
                 await eventManagement.createEvent(formattedTicketPrice, ticketsAvailable);
             } catch (error) {
-                this.pushEvent("create-event-failed", { error: error.message });
+                this.pushEvent("failed-create-event", { error: error.message });
             }
         });
 
@@ -29,7 +29,7 @@ export const Contracts = {
                 const formattedNewTicketPrice = ethers.utils.parseUnits(newTicketPrice.toString(), "ether");
                 await eventManagement.updateEvent(eventId, formattedNewTicketPrice, newTicketsAvailable);
             } catch (error) {
-                this.pushEvent("update-event-failed", { error: error.message });
+                this.pushEvent("failed-update-event", { error: error.message });
             }
         });
 
@@ -39,7 +39,7 @@ export const Contracts = {
                 const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
                 await ticketManagement.buyTicket(eventId, { value: formattedTicketPrice });
             } catch (error) {
-                this.pushEvent("buy-ticket-failed", { error: error.message });
+                this.pushEvent("failed-buy-ticket", { error: error.message });
             }
         });
 
@@ -48,7 +48,7 @@ export const Contracts = {
                 const { eventId, ticketNumber } = e.detail;
                 await eventManagement.redeemTicket(eventId, ticketNumber);
             } catch (error) {
-                this.pushEvent("redeem-ticket-failed", { error: error.message });
+                this.pushEvent("failed-redeem-ticket", { error: error.message });
             }
         });
     },
