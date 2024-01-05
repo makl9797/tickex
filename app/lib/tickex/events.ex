@@ -56,7 +56,6 @@ defmodule Tickex.Events do
 
     %Event{}
     |> Event.changeset(attrs_with_date)
-    |> IO.inspect()
     |> Repo.insert()
   end
 
