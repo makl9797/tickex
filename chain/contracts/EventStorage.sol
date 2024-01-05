@@ -15,14 +15,14 @@ contract EventStorage {
     uint256 public currentEventId;
 
     event EventCreated(
-        uint256 eventId,
+        uint256 indexed eventId,
         uint256 ticketPrice,
         uint256 ticketsAvailable,
         address indexed owner
     );
 
     event EventUpdated(
-        uint256 eventId,
+        uint256 indexed eventId,
         uint256 ticketPrice,
         uint256 ticketsAvailable,
         address indexed owner

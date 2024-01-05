@@ -2,8 +2,8 @@ import { ethers } from "ethers";
 import * as EventManagement from "../../abis/EventManagement.json";
 import * as TicketManagement from "../../abis/TicketManagement.json";
 
-const EVENT_MANAGEMENT_ADDRESS = "0x91cA0DaA14c1aae433de956d4E10cd60d36E995a";
-const TICKET_MANAGEMENT_ADDRESS = "0x2814027dAF6B1770ABEbAA4E598A0671285Ab8e6";
+const EVENT_MANAGEMENT_ADDRESS = "0x5D78981F40447B0619DBc4662cBe72B36D74293b";
+const TICKET_MANAGEMENT_ADDRESS = "0x57C5174960cb239f3eE22dFD659bC56519b81a08";
 
 const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -17,6 +17,12 @@ export const Contracts = {
             const { ticketPrice, ticketsAvailable } = e.detail;
             const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
             const event = await eventManagement.createEvent(formattedTicketPrice, ticketsAvailable);
+        });
+
+        window.addEventListener(`phx:update-event`, async (e) => {
+            const { eventId, newTicketPrice, newTicketsAvailable } = e.detail;
+            const formattedNewTicketPrice = ethers.utils.parseUnits(newTicketPrice.toString(), "ether");
+            await eventManagement.updateEvent(eventId, formattedNewTicketPrice, newTicketsAvailable);
         });
 
         window.addEventListener(`phx:buy-ticket`, async (e) => {

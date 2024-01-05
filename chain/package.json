@@ -4,7 +4,8 @@
     "test": "hardhat test",
     "deploy": "hardhat run scripts/deploy.ts --network hardhat",
     "full-deploy": "npm run compile && npm run test && npm run deploy",
-    "format": "npx prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'"
+    "format": "npx prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'",
+    "deploy_mumbai": "npx hardhat run scripts/deploy.ts --network mumbai"
   },
   "name": "hardhat-project",
   "devDependencies": {

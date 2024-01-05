@@ -14,16 +14,16 @@ contract TicketStorage {
     mapping(uint256 => uint256) private ticketCountPerEvent;
 
     event TicketCreated(
-        uint256 ticketNumber,
-        uint256 eventId,
+        uint256 indexed ticketNumber,
+        uint256 indexed eventId,
         uint256 price,
         address indexed owner,
         bool isRedeemed
     );
 
     event TicketRedeemed(
-        uint256 ticketNumber,
-        uint256 eventId,
+        uint256 indexed ticketNumber,
+        uint256 indexed eventId,
         address indexed owner,
         bool isRedeemed
     );

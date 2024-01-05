@@ -1,6 +1,6 @@
 defmodule Tickex.Contracts do
   @moduledoc false
-  use Tickex.Contracts.EventListener, delay: 1000, max_attempts: 15
+  use Tickex.Contracts.EventListener, delay: 1000, max_attempts: 30
 
   import Phoenix.LiveView
 
@@ -31,13 +31,32 @@ defmodule Tickex.Contracts do
       owner: %User{wallet_address: wallet_address}
     } = event
 
-    filter = EventStorage.EventFilters.event_created(wallet_address)
+    filter = EventStorage.EventFilters.event_created(nil, wallet_address)
     subscribe("event_created", filter)
 
     socket
     |> push_event("create-event", %{
       ticketPrice: ticket_price,
       ticketsAvailable: tickets_available
+    })
+  end
+
+  def update_event(socket, event) do
+    %Event{
+      contract_event_id: contract_event_id,
+      ticket_price: ticket_price,
+      number_of_tickets: tickets_available,
+      owner: %User{wallet_address: wallet_address}
+    } = event
+
+    filter = EventStorage.EventFilters.event_updated(contract_event_id, wallet_address)
+    subscribe("event_updated", filter)
+
+    socket
+    |> push_event("update-event", %{
+      newTicketPrice: ticket_price,
+      newTicketsAvailable: tickets_available,
+      eventId: contract_event_id
     })
   end
 
@@ -48,7 +67,7 @@ defmodule Tickex.Contracts do
       owner: %User{wallet_address: wallet_address}
     } = event
 
-    filter = TicketStorage.EventFilters.ticket_created(nil)
+    filter = TicketStorage.EventFilters.ticket_created(nil, contract_event_id, wallet_address)
     subscribe("ticket_created", filter)
 
     socket
@@ -61,7 +80,7 @@ defmodule Tickex.Contracts do
       event: %Event{contract_event_id: contract_event_id}
     } = ticket
 
-    filter = TicketStorage.EventFilters.ticket_redeemed(nil)
+    filter = TicketStorage.EventFilters.ticket_redeemed(contract_ticket_id, nil, nil)
     subscribe("ticket_redeemed", filter)
 
     socket
