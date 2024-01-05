@@ -14,26 +14,43 @@ export const Contracts = {
         const ticketManagement = new ethers.Contract(TICKET_MANAGEMENT_ADDRESS, TicketManagement.abi, signer);
 
         window.addEventListener(`phx:create-event`, async (e) => {
-            const { ticketPrice, ticketsAvailable } = e.detail;
-            const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
-            const event = await eventManagement.createEvent(formattedTicketPrice, ticketsAvailable);
+            try {
+                const { ticketPrice, ticketsAvailable } = e.detail;
+                const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
+                await eventManagement.createEvent(formattedTicketPrice, ticketsAvailable);
+            } catch (error) {
+                this.pushEvent("failed-create-event", { error: error.message });
+            }
         });
 
         window.addEventListener(`phx:update-event`, async (e) => {
-            const { eventId, newTicketPrice, newTicketsAvailable } = e.detail;
-            const formattedNewTicketPrice = ethers.utils.parseUnits(newTicketPrice.toString(), "ether");
-            await eventManagement.updateEvent(eventId, formattedNewTicketPrice, newTicketsAvailable);
+            try {
+                const { eventId, newTicketPrice, newTicketsAvailable } = e.detail;
+                const formattedNewTicketPrice = ethers.utils.parseUnits(newTicketPrice.toString(), "ether");
+                await eventManagement.updateEvent(eventId, formattedNewTicketPrice, newTicketsAvailable);
+            } catch (error) {
+                this.pushEvent("failed-update-event", { error: error.message });
+            }
         });
 
         window.addEventListener(`phx:buy-ticket`, async (e) => {
-            const { eventId, ticketPrice } = e.detail;
-            const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
-            await ticketManagement.buyTicket(eventId, { value: formattedTicketPrice });
+            try {
+                const { eventId, ticketPrice } = e.detail;
+                const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
+                await ticketManagement.buyTicket(eventId, { value: formattedTicketPrice });
+            } catch (error) {
+                this.pushEvent("failed-buy-ticket", { error: error.message });
+            }
         });
 
         window.addEventListener(`phx:redeem-ticket`, async (e) => {
-            const { eventId, ticketNumber } = e.detail;
-            await eventManagement.redeemTicket(eventId, ticketNumber);
+            try {
+                const { eventId, ticketNumber } = e.detail;
+                await eventManagement.redeemTicket(eventId, ticketNumber);
+            } catch (error) {
+                this.pushEvent("failed-redeem-ticket", { error: error.message });
+            }
         });
     },
 };
+
