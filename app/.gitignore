@@ -35,4 +35,4 @@ tickex-*.tar
 npm-debug.log
 /assets/node_modules/
 /node_modules/
-
+.env
