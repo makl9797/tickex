@@ -1,5 +1,5 @@
 defmodule Tickex.Contracts.TicketManagement do
   use Ethers.Contract,
     abi_file: "assets/abis/TicketManagement.json",
-    default_address: "0x2814027dAF6B1770ABEbAA4E598A0671285Ab8e6"
+    default_address: "0x57C5174960cb239f3eE22dFD659bC56519b81a08"
 end
