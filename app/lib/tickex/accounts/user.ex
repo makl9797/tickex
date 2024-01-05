@@ -4,11 +4,11 @@ defmodule Tickex.Accounts.User do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
-    field :wallet_address, :string
-    field :nonce, :string
-    field :name, :string
-    field :email, :string
-    field :registration_date, :naive_datetime
+    field(:wallet_address, :string)
+    field(:nonce, :string)
+    field(:name, :string)
+    field(:email, :string)
+    field(:registration_date, :naive_datetime)
 
     timestamps(type: :utc_datetime)
   end
@@ -35,16 +35,19 @@ defmodule Tickex.Accounts.User do
   #   |> validate_email(opts)
   # end
 
+  @required_fields ~w[wallet_address nonce registration_date]a
+  @optional_fields ~w[name email]a
+
   def registration_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:wallet_address, :nonce, :registration_date])
-    |> validate_required([:wallet_address, :nonce, :registration_date])
+    |> cast(attrs, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
     |> unique_constraint([:wallet_address])
   end
 
   def update_changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:nonce, :name, :email])
+    |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required([:nonce])
   end
 

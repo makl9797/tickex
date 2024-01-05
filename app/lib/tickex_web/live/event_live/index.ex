@@ -1,8 +1,10 @@
 defmodule TickexWeb.EventLive.Index do
   use TickexWeb, :live_view
 
+  alias Tickex.Accounts.User
+  alias Tickex.Contracts
   alias Tickex.Events
-  alias Tickex.Events.Event
+  alias Tickex.Events.{Event, Ticket}
 
   @impl true
   def mount(_params, _session, socket) do

@@ -29,7 +29,11 @@ config :esbuild,
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+    env: %{
+      "NODE_PATH" => Path.expand("../deps", __DIR__),
+      "EVENT_MANAGEMENT_CONTACT_ADDRESS" => System.get_env("EVENT_MANAGEMENT_CONTACT_ADDRESS"),
+      "TICKET_MANAGEMENT_CONTACT_ADDRESS" => System.get_env("TICKET_MANAGEMENT_CONTACT_ADDRESS")
+    }
   ]
 
 # Configure tailwind (the version is required)
@@ -45,15 +49,18 @@ config :tailwind,
   ]
 
 config :ethers,
-  rpc_client: Ethereumex.HttpClient, # Defaults to: Ethereumex.HttpClient
-  keccak_module: ExKeccak, # Defaults to: ExKeccak
-  json_module: Jason, # Defaults to: Jason
-  secp256k1_module: ExSecp256k1, # Defaults to: ExSecp256k1
-  default_signer: nil, # Defaults to: nil, see Ethers.Signer for more info
-  default_signer_opts: [] # Defaults to: []
+  rpc_client: Ethereumex.HttpClient,
+  keccak_module: ExKeccak,
+  json_module: Jason,
+  secp256k1_module: ExSecp256k1,
+  default_signer: nil,
+  default_signer_opts: []
 
-# If using Ethereumex, you can specify a default JSON-RPC server url here for all requests.
-config :ethereumex, url: System.get_env("MUMBAI_RPC_URL") || ""
+  config :tickex, :contracts,
+  event_storage: System.get_env("EVENT_STORAGE_CONTRACT_ADDRESS") || "",
+  event_management: System.get_env("EVENT_MANAGEMENT_CONTRACT_ADDRESS") || "",
+  ticket_storage: System.get_env("TICKET_STORAGE_CONTRACT_ADDRESS") || "",
+  ticket_management: System.get_env("TICKET_MANAGEMENT_CONTRACT_ADDRESS") || ""
 
 # Configures Elixir's Logger
 config :logger, :console,

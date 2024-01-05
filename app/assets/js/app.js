@@ -22,9 +22,11 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import { Metamask } from "./hooks/metamask"
+import { Contracts } from "./hooks/contracts"
 
 let Hooks = {}
 Hooks.Metamask = Metamask
+Hooks.Contracts = Contracts
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 

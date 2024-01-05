@@ -1,7 +1,12 @@
 defmodule Tickex.Contracts do
   @moduledoc false
+  use Tickex.Contracts.EventListener, delay: 1000, max_attempts: 30
 
+  import Phoenix.LiveView
+
+  alias Tickex.Accounts.User
   alias Tickex.Contracts.{EventStorage, TicketStorage}
+  alias Tickex.Events.{Event, Ticket}
 
   def get_event(event_id) do
     event_id
@@ -18,4 +23,90 @@ defmodule Tickex.Contracts do
     |> TicketStorage.get_ticket_count_for_event()
     |> Ethers.call()
   end
+
+  def create_event(socket, event) do
+    %Event{
+      ticket_price: ticket_price,
+      number_of_tickets: tickets_available,
+      owner: %User{wallet_address: wallet_address}
+    } = event
+
+    filter = EventStorage.EventFilters.event_created(nil, wallet_address)
+    subscribe("event_created", filter)
+
+    socket
+    |> push_event("create-event", %{
+      ticketPrice: ticket_price,
+      ticketsAvailable: tickets_available
+    })
+  end
+
+  def update_event(socket, event) do
+    %Event{
+      contract_event_id: contract_event_id,
+      ticket_price: ticket_price,
+      number_of_tickets: tickets_available,
+      owner: %User{wallet_address: wallet_address}
+    } = event
+
+    filter = EventStorage.EventFilters.event_updated(contract_event_id, wallet_address)
+    subscribe("event_updated", filter)
+
+    socket
+    |> push_event("update-event", %{
+      newTicketPrice: ticket_price,
+      newTicketsAvailable: tickets_available,
+      eventId: contract_event_id
+    })
+  end
+
+  def buy_ticket(socket, event) do
+    %Event{
+      contract_event_id: contract_event_id,
+      ticket_price: ticket_price,
+      owner: %User{wallet_address: wallet_address}
+    } = event
+
+    filter = TicketStorage.EventFilters.ticket_created(nil, contract_event_id, wallet_address)
+    subscribe("ticket_created", filter)
+
+    socket
+    |> push_event("buy-ticket", %{eventId: contract_event_id, ticketPrice: ticket_price})
+  end
+
+  def redeem_ticket(socket, ticket) do
+    %Ticket{
+      contract_ticket_id: contract_ticket_id,
+      event: %Event{contract_event_id: contract_event_id}
+    } = ticket
+
+    filter = TicketStorage.EventFilters.ticket_redeemed(contract_ticket_id, nil, nil)
+    subscribe("ticket_redeemed", filter)
+
+    socket
+    |> push_event("redeem-ticket", %{eventId: contract_event_id, ticketNumber: contract_ticket_id})
+  end
+
+  @impl EventListener
+  def handle_contract_event({:ok, [event]}, "event_created") do
+    IO.inspect(event)
+    :halt
+  end
+
+  def handle_contract_event({:ok, [event]}, "event_updated") do
+    IO.inspect(event)
+    :halt
+  end
+
+  def handle_contract_event({:ok, [event]}, "ticket_redeemed") do
+    IO.inspect(event)
+    :halt
+  end
+
+  def handle_contract_event({:ok, [event]}, "ticket_created") do
+    IO.inspect(event)
+    :halt
+  end
+
+  def handle_contract_event(_response, _event_name), do: IO.inspect(:continue)
 end

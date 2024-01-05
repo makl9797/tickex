@@ -20,6 +20,9 @@ if System.get_env("PHX_SERVER") do
   config :tickex, TickexWeb.Endpoint, server: true
 end
 
+# If using Ethereumex, you can specify a default JSON-RPC server url here for all requests.
+config :ethereumex, url: System.get_env("MUMBAI_RPC_URL") || ""
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
