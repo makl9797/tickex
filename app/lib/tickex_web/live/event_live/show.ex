@@ -14,7 +14,13 @@ defmodule TickexWeb.EventLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:event, Events.get_event!(id) |> Repo.preload([:owner]))}
+     |> assign(:event, Events.get_event!(id))}
+  end
+
+  defp is_owner(nil, _event), do: false
+
+  defp is_owner(current_user, event) do
+    event.owner.id == current_user.id
   end
 
   defp page_title(:show), do: "Show Event"

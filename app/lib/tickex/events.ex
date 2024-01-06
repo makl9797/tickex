@@ -19,7 +19,7 @@ defmodule Tickex.Events do
 
   """
   def list_events do
-    Repo.all(Event)
+    Repo.all(Event) |> Repo.preload(:owner)
   end
 
   @doc """
@@ -36,7 +36,7 @@ defmodule Tickex.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_event!(id), do: Repo.get!(Event, id)
+  def get_event!(id), do: Repo.get!(Event, id) |> Repo.preload(:owner)
 
   @doc """
   Creates a event.

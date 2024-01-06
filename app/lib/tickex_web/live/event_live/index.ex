@@ -16,12 +16,6 @@ defmodule TickexWeb.EventLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Event")
-    |> assign(:event, Events.get_event!(id))
-  end
-
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Event")
@@ -48,5 +42,4 @@ defmodule TickexWeb.EventLive.Index do
   def handle_event("failed-" <> event, params, socket) do
     {:noreply, Contracts.handle_errors(socket, params)}
   end
-
 end
