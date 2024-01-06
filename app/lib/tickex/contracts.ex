@@ -6,6 +6,7 @@ defmodule Tickex.Contracts do
 
   alias Tickex.Accounts.User
   alias Tickex.Contracts.{EventStorage, TicketStorage}
+  alias Tickex.Events
   alias Tickex.Events.{Event, Ticket}
 
   def get_event(event_id) do
@@ -50,7 +51,7 @@ defmodule Tickex.Contracts do
     } = event
 
     filter = EventStorage.EventFilters.event_updated(contract_event_id, wallet_address)
-    subscribe("event_updated", filter, item: event)
+    subscribe("event_updated", filter, item: event, parent: self())
 
     socket
     |> push_event("update-event", %{
@@ -99,8 +100,12 @@ defmodule Tickex.Contracts do
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "event_updated", %{item: event}) do
-    IO.inspect(ethers_event)
+  def handle_contract_event({:ok, [ethers_event]}, "event_updated", opts) do
+    opts.item.id
+    |> Events.get_event!()
+    |> Events.update_event(Map.from_struct(opts.item))
+
+    send(opts.parent, {__MODULE__, {:saved, opts.item}})
     :halt
   end
 

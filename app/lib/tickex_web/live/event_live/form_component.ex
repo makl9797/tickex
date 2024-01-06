@@ -3,6 +3,7 @@ defmodule TickexWeb.EventLive.FormComponent do
 
   alias Tickex.Contracts
   alias Tickex.Events
+  alias Tickex.Events.Event
 
   @impl true
   def render(assigns) do
@@ -59,18 +60,24 @@ defmodule TickexWeb.EventLive.FormComponent do
   end
 
   defp save_event(socket, :edit, event_params) do
-    case Events.update_event(socket.assigns.event, event_params) do
-      {:ok, event} ->
-        notify_parent({:saved, event})
+    socket =
+      case Events.validate_event(socket.assigns.event, event_params) do
+        {:ok, %Event{has_on_chain_changes: true} = event} ->
+          socket
+          |> Contracts.update_event(event)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Event updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        {:ok, %Event{} = event} ->
+          Events.update_event(socket.assigns.event, event_params)
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+          socket
+          |> put_flash(:info, "Event updated successfully")
+          |> push_patch(to: socket.assigns.patch)
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          assign_form(socket, changeset)
+      end
+
+    {:noreply, socket}
   end
 
   defp save_event(socket, :new, event_params) do
@@ -79,26 +86,12 @@ defmodule TickexWeb.EventLive.FormComponent do
         socket =
           socket
           |> Contracts.create_event(event)
-          |> push_patch(to: socket.assigns.patch)
 
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
     end
-
-    # case Events.create_event(event_params) do
-    #   {:ok, event} ->
-    #     notify_parent({:saved, event})
-
-    #     {:noreply,
-    #      socket
-    #      |> put_flash(:info, "Event created successfully")
-    #      |> push_patch(to: socket.assigns.patch)}
-
-    #   {:error, %Ecto.Changeset{} = changeset} ->
-    #     {:noreply, assign_form(socket, changeset)}
-    # end
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do

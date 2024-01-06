@@ -17,6 +17,17 @@ defmodule TickexWeb.EventLive.Show do
      |> assign(:event, Events.get_event!(id))}
   end
 
+  @impl true
+  def handle_info({Tickex.Contracts, {:saved, event}}, socket) do
+    socket =
+      socket
+      |> assign(:event, event)
+      |> put_flash(:info, "Event updated successfully")
+      |> push_patch(to: ~p"/events/#{event.id}")
+
+    {:noreply, socket}
+  end
+
   defp is_owner(nil, _event), do: false
 
   defp is_owner(current_user, event) do

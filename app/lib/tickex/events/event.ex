@@ -15,6 +15,8 @@ defmodule Tickex.Events.Event do
     field(:ticket_price, :float)
     field(:number_of_tickets, :integer)
 
+    field(:has_on_chain_changes, :boolean, virtual: true, default: false)
+
     belongs_to(:owner, User)
 
     timestamps(type: :utc_datetime)
@@ -28,5 +30,16 @@ defmodule Tickex.Events.Event do
     event
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
+    |> check_for_on_chain_changes([:ticket_price, :number_of_tickets])
+  end
+
+  defp check_for_on_chain_changes(changeset, fields) do
+    has_on_chain_changes =
+      Enum.reduce(fields, false, fn
+        field, false -> changed?(changeset, field)
+        _field, acc -> acc
+      end)
+
+    put_change(changeset, :has_on_chain_changes, has_on_chain_changes)
   end
 end

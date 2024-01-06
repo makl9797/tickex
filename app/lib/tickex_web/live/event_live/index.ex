@@ -34,6 +34,7 @@ defmodule TickexWeb.EventLive.Index do
       socket
       |> stream_insert(:events, event)
       |> put_flash(:info, "Event created successfully")
+      |> push_patch(to: ~p"/events")
 
     {:noreply, socket}
   end
