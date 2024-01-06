@@ -1,8 +1,8 @@
 defmodule TickexWeb.EventLive.Show do
   use TickexWeb, :live_view
 
+  alias Tickex.Contracts
   alias Tickex.Events
-  alias Tickex.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -26,6 +26,11 @@ defmodule TickexWeb.EventLive.Show do
       |> push_patch(to: ~p"/events/#{event.id}")
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("failed-" <> _event, params, socket) do
+    {:noreply, Contracts.handle_errors(socket, params)}
   end
 
   defp is_owner(nil, _event), do: false

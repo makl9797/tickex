@@ -1,10 +1,9 @@
 defmodule TickexWeb.EventLive.Index do
   use TickexWeb, :live_view
 
-  alias Tickex.Accounts.User
   alias Tickex.Contracts
   alias Tickex.Events
-  alias Tickex.Events.{Event, Ticket}
+  alias Tickex.Events.Event
 
   @impl true
   def mount(_params, _session, socket) do
@@ -40,7 +39,7 @@ defmodule TickexWeb.EventLive.Index do
   end
 
   @impl true
-  def handle_event("failed-" <> event, params, socket) do
+  def handle_event("failed-" <> _event, params, socket) do
     {:noreply, Contracts.handle_errors(socket, params)}
   end
 end

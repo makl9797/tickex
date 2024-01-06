@@ -1,6 +1,6 @@
 <.header>
   <%= @event.title %>
-  <:subtitle>  <%= @event.description %></:subtitle>
+  <:subtitle><%= @event.description %></:subtitle>
   <:actions>
     <.link :if={is_owner(@current_user, @event)} patch={~p"/events/#{@event}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit event</.button>
@@ -19,6 +19,7 @@
 <.back navigate={~p"/events"}>Back to events</.back>
 
 <.modal :if={@live_action == :edit} id="event-modal" show on_cancel={JS.patch(~p"/events/#{@event}")}>
+  <.flash_group flash={@flash} />
   <.live_component
     module={TickexWeb.EventLive.FormComponent}
     id={@event.id}

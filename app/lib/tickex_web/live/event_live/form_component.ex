@@ -66,7 +66,7 @@ defmodule TickexWeb.EventLive.FormComponent do
           socket
           |> Contracts.update_event(event)
 
-        {:ok, %Event{} = event} ->
+        {:ok, %Event{} = _event} ->
           Events.update_event(socket.assigns.event, event_params)
 
           socket
@@ -97,6 +97,4 @@ defmodule TickexWeb.EventLive.FormComponent do
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

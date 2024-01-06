@@ -88,7 +88,6 @@ defmodule Tickex.Contracts do
     |> push_event("redeem-ticket", %{eventId: contract_event_id, ticketNumber: contract_ticket_id})
   end
 
-  @impl EventListener
   def handle_contract_event({:ok, [ethers_event]}, "event_created", opts) do
     contract_event_id = Enum.at(ethers_event.topics, 1)
 
@@ -100,7 +99,7 @@ defmodule Tickex.Contracts do
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "event_updated", opts) do
+  def handle_contract_event({:ok, [_ethers_event]}, "event_updated", opts) do
     opts.item.id
     |> Events.get_event!()
     |> Events.update_event(Map.from_struct(opts.item))
@@ -109,19 +108,15 @@ defmodule Tickex.Contracts do
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "ticket_redeemed", %{item: ticket}) do
-    IO.inspect(ethers_event)
+  def handle_contract_event({:ok, [_ethers_event]}, "ticket_redeemed", _opts) do
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "ticket_created", %{item: ticket}) do
-    IO.inspect(ethers_event)
+  def handle_contract_event({:ok, [_ethers_event]}, "ticket_created", _opts) do
     :halt
   end
 
-  def handle_contract_event(_response, _event_name, opts) do
-    :continue
-  end
+  def handle_contract_event(_response, _event_name, _opts), do: :continue
 
   def handle_errors(socket, %{"error" => "user rejected transaction" <> _rest = error}) do
     error_msg =

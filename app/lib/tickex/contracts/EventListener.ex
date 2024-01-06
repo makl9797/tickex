@@ -30,7 +30,6 @@ defmodule Tickex.Contracts.EventListener do
         def handle_contract_event({:ok, []}, _event_name), do: :continue
 
         def handle_contract_event({:ok, [event]}, "event_created") do
-          IO.inspect(event)
           :halt
         end
       end

@@ -20,6 +20,7 @@
 </.table>
 
 <.modal :if={@live_action in [:new, :edit]} id="event-modal" show on_cancel={JS.patch(~p"/events")}>
+  <.flash_group flash={@flash} />
   <.live_component
     module={TickexWeb.EventLive.FormComponent}
     id={@event.id || :new}
