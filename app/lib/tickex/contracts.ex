@@ -32,7 +32,7 @@ defmodule Tickex.Contracts do
     } = event
 
     filter = EventStorage.EventFilters.event_created(nil, wallet_address)
-    subscribe("event_created", filter, event)
+    subscribe("event_created", filter, item: event, parent: self())
 
     socket
     |> push_event("create-event", %{
@@ -50,7 +50,7 @@ defmodule Tickex.Contracts do
     } = event
 
     filter = EventStorage.EventFilters.event_updated(contract_event_id, wallet_address)
-    subscribe("event_updated", filter, event)
+    subscribe("event_updated", filter, item: event)
 
     socket
     |> push_event("update-event", %{
@@ -68,7 +68,7 @@ defmodule Tickex.Contracts do
     } = event
 
     filter = TicketStorage.EventFilters.ticket_created(nil, contract_event_id, wallet_address)
-    subscribe("ticket_created", filter, event)
+    subscribe("ticket_created", filter, item: event)
 
     socket
     |> push_event("buy-ticket", %{eventId: contract_event_id, ticketPrice: ticket_price})
@@ -81,34 +81,40 @@ defmodule Tickex.Contracts do
     } = ticket
 
     filter = TicketStorage.EventFilters.ticket_redeemed(contract_ticket_id, nil, nil)
-    subscribe("ticket_redeemed", filter, ticket)
+    subscribe("ticket_redeemed", filter, item: ticket)
 
     socket
     |> push_event("redeem-ticket", %{eventId: contract_event_id, ticketNumber: contract_ticket_id})
   end
 
   @impl EventListener
-  def handle_contract_event({:ok, [ethers_event]}, "event_created", event) do
+  def handle_contract_event({:ok, [ethers_event]}, "event_created", opts) do
+    contract_event_id = Enum.at(ethers_event.topics, 1)
+
+    event =
+      %Event{opts.item | contract_event_id: contract_event_id}
+      |> Tickex.Repo.insert!()
+
+    send(opts.parent, {__MODULE__, {:saved, event}})
+    :halt
+  end
+
+  def handle_contract_event({:ok, [ethers_event]}, "event_updated", %{item: event}) do
     IO.inspect(ethers_event)
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "event_updated", event) do
+  def handle_contract_event({:ok, [ethers_event]}, "ticket_redeemed", %{item: ticket}) do
     IO.inspect(ethers_event)
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "ticket_redeemed", ticket) do
+  def handle_contract_event({:ok, [ethers_event]}, "ticket_created", %{item: ticket}) do
     IO.inspect(ethers_event)
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "ticket_created", ticket) do
-    IO.inspect(ethers_event)
-    :halt
-  end
-
-  def handle_contract_event(_response, _event_name, _item) do
+  def handle_contract_event(_response, _event_name, opts) do
     :continue
   end
 

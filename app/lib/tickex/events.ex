@@ -51,11 +51,8 @@ defmodule Tickex.Events do
 
   """
   def create_event(attrs \\ %{}) do
-    current_date = NaiveDateTime.utc_now()
-    attrs_with_date = Map.put_new(attrs, "creation_date", current_date)
-
     %Event{}
-    |> Event.changeset(attrs_with_date)
+    |> Event.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -104,6 +101,14 @@ defmodule Tickex.Events do
   """
   def change_event(%Event{} = event, attrs \\ %{}) do
     Event.changeset(event, attrs)
+  end
+
+  def validate_event(attrs), do: validate_event(%Event{}, attrs)
+
+  def validate_event(event, attrs \\ %{}) do
+    event
+    |> Event.changeset(attrs)
+    |> Ecto.Changeset.apply_action(:validate)
   end
 
   @doc """

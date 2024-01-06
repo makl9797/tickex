@@ -1,6 +1,7 @@
 defmodule TickexWeb.EventLive.FormComponent do
   use TickexWeb, :live_component
 
+  alias Tickex.Contracts
   alias Tickex.Events
 
   @impl true
@@ -12,7 +13,14 @@ defmodule TickexWeb.EventLive.FormComponent do
         <:subtitle>Use this form to create a new event.</:subtitle>
       </.header>
 
-      <.simple_form for={@form} id="event-form" phx-target={@myself} phx-change="validate" phx-submit="save">
+      <.simple_form
+        for={@form}
+        id="event-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+        phx-hook="Contracts"
+      >
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:description]} type="textarea" label="Description" />
         <.input field={@form[:location]} type="text" label="Location" />
@@ -66,18 +74,31 @@ defmodule TickexWeb.EventLive.FormComponent do
   end
 
   defp save_event(socket, :new, event_params) do
-    case Events.create_event(event_params) do
+    case Events.validate_event(socket.assigns.event, event_params) do
       {:ok, event} ->
-        notify_parent({:saved, event})
+        socket =
+          socket
+          |> Contracts.create_event(event)
+          |> push_patch(to: socket.assigns.patch)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Event created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
     end
+
+    # case Events.create_event(event_params) do
+    #   {:ok, event} ->
+    #     notify_parent({:saved, event})
+
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "Event created successfully")
+    #      |> push_patch(to: socket.assigns.patch)}
+
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign_form(socket, changeset)}
+    # end
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do

@@ -25,7 +25,7 @@ defmodule TickexWeb.EventLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Event")
-    |> assign(:event, %Event{})
+    |> assign(:event, %Event{owner: socket.assigns.current_user})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -35,7 +35,12 @@ defmodule TickexWeb.EventLive.Index do
   end
 
   @impl true
-  def handle_info({TickexWeb.EventLive.FormComponent, {:saved, event}}, socket) do
-    {:noreply, stream_insert(socket, :events, event)}
+  def handle_info({Tickex.Contracts, {:saved, event}}, socket) do
+    socket =
+      socket
+      |> stream_insert(:events, event)
+      |> put_flash(:info, "Event created successfully")
+
+    {:noreply, socket}
   end
 end

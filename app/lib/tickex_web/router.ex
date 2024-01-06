@@ -21,19 +21,6 @@ defmodule TickexWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :home)
-    live("/events", EventLive.Index, :index)
-    live("/events/new", EventLive.Index, :new)
-    live("/events/:id/edit", EventLive.Index, :edit)
-
-    live("/events/:id", EventLive.Show, :show)
-    live("/events/:id/show/edit", EventLive.Show, :edit)
-
-    live("/tickets", TicketLive.Index, :index)
-    live("/tickets/new", TicketLive.Index, :new)
-    live("/tickets/:id/edit", TicketLive.Index, :edit)
-
-    live("/tickets/:id", TicketLive.Show, :show)
-    live("/tickets/:id/show/edit", TicketLive.Show, :edit)
   end
 
   # Other scopes may use custom stacks.
@@ -78,6 +65,19 @@ defmodule TickexWeb.Router do
       on_mount: [{TickexWeb.UserAuth, :ensure_authenticated}] do
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
+      live("/events", EventLive.Index, :index)
+      live("/events/new", EventLive.Index, :new)
+      live("/events/:id/edit", EventLive.Index, :edit)
+
+      live("/events/:id", EventLive.Show, :show)
+      live("/events/:id/show/edit", EventLive.Show, :edit)
+
+      live("/tickets", TicketLive.Index, :index)
+      live("/tickets/new", TicketLive.Index, :new)
+      live("/tickets/:id/edit", TicketLive.Index, :edit)
+
+      live("/tickets/:id", TicketLive.Show, :show)
+      live("/tickets/:id/show/edit", TicketLive.Show, :edit)
     end
   end
 

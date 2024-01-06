@@ -9,7 +9,6 @@ defmodule Tickex.Events.Event do
     field(:title, :string)
     field(:description, :string)
     field(:location, :string)
-    field(:creation_date, :utc_datetime)
 
     # Contract fields
     field(:contract_event_id, :integer)
@@ -21,7 +20,7 @@ defmodule Tickex.Events.Event do
     timestamps(type: :utc_datetime)
   end
 
-  @required_fields ~w[title creation_date ticket_price number_of_tickets]a
+  @required_fields ~w[title ticket_price number_of_tickets]a
   @optional_fields ~w[description location contract_event_id]a
 
   @doc false

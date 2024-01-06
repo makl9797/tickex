@@ -2,6 +2,7 @@ defmodule TickexWeb.EventLive.Show do
   use TickexWeb, :live_view
 
   alias Tickex.Events
+  alias Tickex.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +14,7 @@ defmodule TickexWeb.EventLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:event, Events.get_event!(id))}
+     |> assign(:event, Events.get_event!(id) |> Repo.preload([:owner]))}
   end
 
   defp page_title(:show), do: "Show Event"
