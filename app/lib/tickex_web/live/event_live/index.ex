@@ -43,4 +43,10 @@ defmodule TickexWeb.EventLive.Index do
 
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_event("failed-" <> event, params, socket) do
+    {:noreply, Contracts.handle_errors(socket, params)}
+  end
+
 end
