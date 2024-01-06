@@ -56,12 +56,6 @@ config :ethers,
   default_signer: nil,
   default_signer_opts: []
 
-config :tickex, :contracts,
-  event_storage: System.get_env("EVENT_STORAGE_CONTRACT_ADDRESS") || "",
-  event_management: System.get_env("EVENT_MANAGEMENT_CONTRACT_ADDRESS") || "",
-  ticket_storage: System.get_env("TICKET_STORAGE_CONTRACT_ADDRESS") || "",
-  ticket_management: System.get_env("TICKET_MANAGEMENT_CONTRACT_ADDRESS") || ""
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
