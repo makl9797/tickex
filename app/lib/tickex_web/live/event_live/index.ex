@@ -1,10 +1,9 @@
 defmodule TickexWeb.EventLive.Index do
   use TickexWeb, :live_view
 
-  alias Tickex.Accounts.User
   alias Tickex.Contracts
   alias Tickex.Events
-  alias Tickex.Events.{Event, Ticket}
+  alias Tickex.Events.Event
 
   @impl true
   def mount(_params, _session, socket) do
@@ -16,16 +15,10 @@ defmodule TickexWeb.EventLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Event")
-    |> assign(:event, Events.get_event!(id))
-  end
-
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Event")
-    |> assign(:event, %Event{})
+    |> assign(:event, %Event{owner: socket.assigns.current_user})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -35,15 +28,18 @@ defmodule TickexWeb.EventLive.Index do
   end
 
   @impl true
-  def handle_info({TickexWeb.EventLive.FormComponent, {:saved, event}}, socket) do
-    {:noreply, stream_insert(socket, :events, event)}
+  def handle_info({Tickex.Contracts, {:saved, event}}, socket) do
+    socket =
+      socket
+      |> stream_insert(:events, event)
+      |> put_flash(:info, "Event created successfully")
+      |> push_patch(to: ~p"/events")
+
+    {:noreply, socket}
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    event = Events.get_event!(id)
-    {:ok, _} = Events.delete_event(event)
-
-    {:noreply, stream_delete(socket, :events, event)}
+  def handle_event("failed-" <> _event, params, socket) do
+    {:noreply, Contracts.handle_errors(socket, params)}
   end
 end

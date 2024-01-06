@@ -30,7 +30,6 @@ defmodule Tickex.Contracts.EventListener do
         def handle_contract_event({:ok, []}, _event_name), do: :continue
 
         def handle_contract_event({:ok, [event]}, "event_created") do
-          IO.inspect(event)
           :halt
         end
       end
@@ -39,42 +38,43 @@ defmodule Tickex.Contracts.EventListener do
 
       MyModule.subscribe("event_created", filter_fun)
   """
-  defmacro __using__(opts) do
+  defmacro __using__(module_opts) do
     quote do
-      def subscribe(event_name, filter_fun, item) do
+      def subscribe(event_name, filter_fun, opts \\ []) do
+        opts = unquote(module_opts) ++ opts
+
         EventListener.subscribe(
           event_name,
           filter_fun,
-          item,
           &handle_contract_event/3,
-          unquote(opts)
+          opts
         )
       end
     end
   end
 
-  def subscribe(event_name, filter_fun, item, handle_fun, opts) do
-    Task.start(fn -> listen_for_events(event_name, filter_fun, item, handle_fun, opts, 0) end)
+  def subscribe(event_name, filter_fun, handle_fun, opts) do
+    Task.start(fn -> listen_for_events(event_name, filter_fun, handle_fun, Map.new(opts), 0) end)
   end
 
-  defp listen_for_events(:continue, event_name, filter_fun, item, handle_fun, opts, count) do
-    delay = Keyword.get(opts, :delay, 5000)
-    max_attempts = Keyword.get(opts, :max_attempts, 10)
+  defp listen_for_events(:continue, event_name, filter_fun, handle_fun, opts, count) do
+    delay = Map.get(opts, :delay, 5000)
+    max_attempts = Map.get(opts, :max_attempts, 10)
 
     :timer.sleep(delay)
 
     if count < max_attempts do
-      listen_for_events(event_name, filter_fun, item, handle_fun, opts, count + 1)
+      listen_for_events(event_name, filter_fun, handle_fun, opts, count + 1)
     end
   end
 
-  defp listen_for_events(:halt, _event_name, _filter_fun, _item, _handle_fun, _opts, _count),
+  defp listen_for_events(:halt, _event_name, _filter_fun, _handle_fun, _opts, _count),
     do: :ok
 
-  defp listen_for_events(event_name, filter_fun, item, handle_fun, opts, count) do
+  defp listen_for_events(event_name, filter_fun, handle_fun, opts, count) do
     filter_fun
     |> Ethers.get_logs()
-    |> handle_fun.(event_name, item)
-    |> listen_for_events(event_name, filter_fun, item, handle_fun, opts, count)
+    |> handle_fun.(event_name, opts)
+    |> listen_for_events(event_name, filter_fun, handle_fun, opts, count)
   end
 end

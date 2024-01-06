@@ -1,7 +1,7 @@
 <.header>
   Listing Events
   <:actions>
-    <.link patch={~p"/events/new"}>
+    <.link :if={@current_user} patch={~p"/events/new"}>
       <.button>New Event</.button>
     </.link>
   </:actions>
@@ -9,25 +9,18 @@
 
 <.table id="events" rows={@streams.events} row_click={fn {_id, event} -> JS.navigate(~p"/events/#{event}") end}>
   <:col :let={{_id, event}} label="Title"><%= event.title %></:col>
-  <:col :let={{_id, event}} label="Description"><%= event.description %></:col>
   <:col :let={{_id, event}} label="Location"><%= event.location %></:col>
-  <:col :let={{_id, event}} label="Creation date"><%= event.creation_date %></:col>
   <:col :let={{_id, event}} label="Ticket Price"><%= event.ticket_price %></:col>
   <:col :let={{_id, event}} label="Number of Tickets"><%= event.number_of_tickets %></:col>
   <:action :let={{_id, event}}>
     <div class="sr-only">
       <.link navigate={~p"/events/#{event}"}>Show</.link>
     </div>
-    <.link patch={~p"/events/#{event}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={{id, event}}>
-    <.link phx-click={JS.push("delete", value: %{id: event.id}) |> hide("##{id}")} data-confirm="Are you sure?">
-      Delete
-    </.link>
   </:action>
 </.table>
 
 <.modal :if={@live_action in [:new, :edit]} id="event-modal" show on_cancel={JS.patch(~p"/events")}>
+  <.flash_group flash={@flash} />
   <.live_component
     module={TickexWeb.EventLive.FormComponent}
     id={@event.id || :new}

@@ -1,25 +1,25 @@
 <.header>
-  Event <%= @event.id %>
-  <:subtitle>This is a event record from your database.</:subtitle>
+  <%= @event.title %>
+  <:subtitle><%= @event.description %></:subtitle>
   <:actions>
-    <.link patch={~p"/events/#{@event}/show/edit"} phx-click={JS.push_focus()}>
+    <.link :if={is_owner(@current_user, @event)} patch={~p"/events/#{@event}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit event</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Title"><%= @event.title %></:item>
-  <:item title="Description"><%= @event.description %></:item>
   <:item title="Location"><%= @event.location %></:item>
-  <:item title="Creation date"><%= @event.creation_date %></:item>
   <:item title="Ticket Price"><%= @event.ticket_price %></:item>
   <:item title="Number of Tickets"><%= @event.number_of_tickets %></:item>
+  <:item title="Organizer"><%= @event.owner.wallet_address %></:item>
+  <:item title="Event ID"><%= @event.contract_event_id %></:item>
 </.list>
 
 <.back navigate={~p"/events"}>Back to events</.back>
 
 <.modal :if={@live_action == :edit} id="event-modal" show on_cancel={JS.patch(~p"/events/#{@event}")}>
+  <.flash_group flash={@flash} />
   <.live_component
     module={TickexWeb.EventLive.FormComponent}
     id={@event.id}
