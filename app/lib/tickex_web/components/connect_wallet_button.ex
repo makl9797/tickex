@@ -54,7 +54,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
             <div>
               <button
                 phx-click={toggle_dropdown()}
-                phx-click-away={toggle_dropdown()}
+                phx-click-away={close_dropdown()}
                 type="button"
                 class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 id="user-menu-button"
@@ -195,12 +195,15 @@ defmodule TickexWeb.Components.ConnectWalletButton do
   defp toggle_dropdown do
     JS.toggle(
       to: "#profile-dropdown",
-      in:
-        {"transition ease-out duration-100", "transform opacity-0 scale-95",
-         "transform opacity-100 scale-100"},
-      out:
-        {"transition ease-in duration-75", "transform opacity-100 scale-100",
-         "transform opacity-0 scale-95"}
+      in: {"transition ease-out duration-100", "transform opacity-0 scale-95", "transform opacity-100 scale-100"},
+      out: {"transition ease-in duration-75", "transform opacity-100 scale-100", "transform opacity-0 scale-95"}
+    )
+  end
+
+  defp close_dropdown do
+    JS.hide(
+      to: "#profile-dropdown",
+      transition: {"transition ease-in duration-75", "transform opacity-100 scale-100", "transform opacity-0 scale-95"}
     )
   end
 
