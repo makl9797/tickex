@@ -7,12 +7,26 @@ defmodule TickexWeb.EventLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :events, Events.list_events())}
+    events = Events.list_events()
+    user_events = events |> Enum.filter(fn event -> event.owner.id == socket.assigns.current_user.id end)
+
+    socket =
+      socket
+      |> stream(:events, events)
+      |> stream(:user_events, user_events)
+
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Event")
+    |> assign(:event, Events.get_event!(id))
   end
 
   defp apply_action(socket, :new, _params) do

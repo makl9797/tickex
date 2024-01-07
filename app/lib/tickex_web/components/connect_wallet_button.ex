@@ -75,15 +75,6 @@ defmodule TickexWeb.Components.ConnectWalletButton do
               tabindex="-1"
             >
               <.link
-                navigate={~p"/user/events"}
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-0"
-              >
-                My Events
-              </.link>
-              <.link
                 navigate={~p"/user/tickets"}
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 role="menuitem"
