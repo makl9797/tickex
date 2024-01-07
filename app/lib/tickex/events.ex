@@ -121,7 +121,7 @@ defmodule Tickex.Events do
 
   """
   def list_tickets do
-    Repo.all(Ticket)
+    Repo.all(Ticket) |> Repo.preload([:buyer])
   end
 
   @doc """

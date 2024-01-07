@@ -8,7 +8,13 @@ defmodule TickexWeb.EventLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     events = Events.list_events()
-    user_events = events |> Enum.filter(fn event -> event.owner.id == socket.assigns.current_user.id end)
+
+    user_events =
+      if socket.assigns.current_user do
+        events |> Enum.filter(fn event -> event.owner.id == socket.assigns.current_user.id end)
+      else
+        []
+      end
 
     socket =
       socket

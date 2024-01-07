@@ -1,26 +1,27 @@
-<div class="mb-8">
-<.header>
-  Your Events
-</.header>
+<div :if={@current_user} class="mb-8">
+  <.header>
+    Your Events
+  </.header>
 
-<.table
-  id="user_events"
-  rows={@streams.user_events}
-  row_click={fn {_id, event} -> JS.navigate(~p"/events/#{event}") end}
->
-  <:col :let={{_id, event}} label="Title"><%= event.title %></:col>
-  <:col :let={{_id, event}} label="Location"><%= event.location %></:col>
-  <:col :let={{_id, event}} label="Ticket Price"><%= event.ticket_price %></:col>
-  <:col :let={{_id, event}} label="Number of Tickets"><%= event.number_of_tickets %></:col>
-  <:action :let={{_id, event}}>
-    <div class="sr-only">
-      <.link navigate={~p"/events/#{event}"}>Show</.link>
-  
-    </div>
-        <.link patch={~p"/events/#{event}/edit"}>Edit</.link>
-  </:action>
-</.table>
-
+  <.table
+    id="user_events"
+    rows={@streams.user_events}
+    row_click={fn {_id, event} -> JS.navigate(~p"/events/#{event}") end}
+  >
+    <:col :let={{_id, event}} label="Title"><%= event.title %></:col>
+    <:col :let={{_id, event}} label="Location"><%= event.location %></:col>
+    <:col :let={{_id, event}} label="Ticket Price"><%= event.ticket_price %></:col>
+    <:col :let={{_id, event}} label="Number of Tickets"><%= event.number_of_tickets %></:col>
+    <:action :let={{_id, event}}>
+      <div class="sr-only">
+        <.link navigate={~p"/events/#{event}"}>Show</.link>
+      </div>
+      <.link patch={~p"/events/#{event}/edit"}>Edit</.link>
+    </:action>
+    <:empty_state>
+      You have not created any events yet.
+    </:empty_state>
+  </.table>
 </div>
 
 <.header>
@@ -42,6 +43,9 @@
       <.link navigate={~p"/events/#{event}"}>Show</.link>
     </div>
   </:action>
+  <:empty_state>
+    No events have been created yet.
+  </:empty_state>
 </.table>
 
 <.modal :if={@live_action in [:new, :edit]} id="event-modal" show on_cancel={JS.patch(~p"/events")}>
