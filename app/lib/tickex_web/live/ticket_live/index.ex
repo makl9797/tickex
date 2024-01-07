@@ -40,4 +40,7 @@ defmodule TickexWeb.TicketLive.Index do
   def handle_info({TickexWeb.TicketLive.FormComponent, {:saved, ticket}}, socket) do
     {:noreply, stream_insert(socket, :tickets, ticket)}
   end
+
+  defp redeemed(true), do: "Yes"
+  defp redeemed(_redeemed), do: "No"
 end
