@@ -1,6 +1,11 @@
 <div :if={@current_user} class="mb-8">
   <.header>
     Your Events
+    <:actions>
+      <.link :if={@current_user} patch={~p"/events/new"}>
+        <.button>New Event</.button>
+      </.link>
+    </:actions>
   </.header>
 
   <.table
@@ -26,11 +31,6 @@
 
 <.header>
   All Events
-  <:actions>
-    <.link :if={@current_user} patch={~p"/events/new"}>
-      <.button>New Event</.button>
-    </.link>
-  </:actions>
 </.header>
 
 <.table id="events" rows={@streams.events} row_click={fn {_id, event} -> JS.navigate(~p"/events/#{event}") end}>

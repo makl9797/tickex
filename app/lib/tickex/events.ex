@@ -121,7 +121,7 @@ defmodule Tickex.Events do
 
   """
   def list_tickets do
-    Repo.all(Ticket) |> Repo.preload([:buyer])
+    Repo.all(Ticket) |> Repo.preload([:event, :buyer])
   end
 
   @doc """
@@ -138,7 +138,7 @@ defmodule Tickex.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_ticket!(id), do: Repo.get!(Ticket, id)
+  def get_ticket!(id), do: Repo.get!(Ticket, id) |> Repo.preload([:event, :buyer])
 
   @doc """
   Creates a ticket.

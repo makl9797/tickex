@@ -48,7 +48,7 @@ defmodule TickexWeb.EventLive.Index do
   end
 
   @impl true
-  def handle_info({Tickex.Contracts, {:saved, event}}, socket) do
+  def handle_info({Tickex.Contracts, {:saved_event, event}}, socket) do
     socket =
       socket
       |> stream_insert(:events, event)
