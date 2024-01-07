@@ -13,7 +13,7 @@ defmodule TickexWeb.TicketLive.FormComponent do
       </.header>
 
       <.simple_form for={@form} id="ticket-form" phx-target={@myself} phx-change="validate" phx-submit="save">
-        <.input field={@form[:purchase_date]} type="datetime-local" label="Purchase date" />
+        <.input field={@form[:inserted_at]} type="datetime-local" label="Purchase date" />
         <.input field={@form[:redeemed]} type="checkbox" label="Redeemed" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Ticket</.button>

@@ -1,6 +1,9 @@
 defmodule Tickex.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+
+  alias Tickex.Events.{Event, Ticket}
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
@@ -9,6 +12,9 @@ defmodule Tickex.Accounts.User do
     field(:name, :string)
     field(:email, :string)
     field(:registration_date, :naive_datetime)
+
+    has_many(:tickets, Ticket)
+    has_many(:events, Event)
 
     timestamps(type: :utc_datetime)
   end

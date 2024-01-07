@@ -204,4 +204,12 @@ defmodule Tickex.Events do
   def change_ticket(%Ticket{} = ticket, attrs \\ %{}) do
     Ticket.changeset(ticket, attrs)
   end
+
+  def validate_ticket(attrs), do: validate_ticket(%Ticket{}, attrs)
+
+  def validate_ticket(ticket, attrs \\ %{}) do
+    ticket
+    |> Ticket.changeset(attrs)
+    |> Ecto.Changeset.apply_action(:validate)
+  end
 end

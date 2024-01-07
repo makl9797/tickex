@@ -61,15 +61,15 @@ defmodule Tickex.Contracts do
     })
   end
 
-  def buy_ticket(socket, event) do
-    %Event{
-      contract_event_id: contract_event_id,
-      ticket_price: ticket_price,
-      owner: %User{wallet_address: wallet_address}
-    } = event
+  def buy_ticket(socket, ticket) do
+    %Ticket{
+      event: %Event{contract_event_id: contract_event_id},
+      purchase_price: ticket_price,
+      buyer: %User{wallet_address: wallet_address}
+    } = ticket
 
     filter = TicketStorage.EventFilters.ticket_created(nil, contract_event_id, wallet_address)
-    subscribe("ticket_created", filter, item: event)
+    subscribe("ticket_created", filter, item: ticket, parent: self())
 
     socket
     |> push_event("buy-ticket", %{eventId: contract_event_id, ticketPrice: ticket_price})
@@ -104,7 +104,18 @@ defmodule Tickex.Contracts do
     |> Events.get_event!()
     |> Events.update_event(Map.from_struct(opts.item))
 
-    send(opts.parent, {__MODULE__, {:saved, opts.item}})
+    send(opts.parent, {__MODULE__, {:saved_event, opts.item}})
+    :halt
+  end
+
+  def handle_contract_event({:ok, [ethers_event]}, "ticket_created", opts) do
+    contract_ticket_id = Enum.at(ethers_event.topics, 1)
+
+    ticket =
+      %Ticket{opts.item | contract_ticket_id: contract_ticket_id}
+      |> Tickex.Repo.insert!()
+
+    send(opts.parent, {__MODULE__, {:saved_ticket, ticket}})
     :halt
   end
 
@@ -112,17 +123,10 @@ defmodule Tickex.Contracts do
     :halt
   end
 
-  def handle_contract_event({:ok, [_ethers_event]}, "ticket_created", _opts) do
-    :halt
-  end
-
   def handle_contract_event(_response, _event_name, _opts), do: :continue
 
   def handle_errors(socket, %{"error" => "user rejected transaction" <> _rest = error}) do
-    error_msg =
-      error
-      |> String.split(",")
-      |> List.first()
+    error_msg = "Transaction canceled"
 
     put_flash(socket, :error, error_msg)
   end
