@@ -56,9 +56,10 @@ defmodule TickexWeb.Router do
       live("/events/new", EventLive.Index, :new)
       live("/events/:id/edit", EventLive.Index, :edit)
       live("/events/:id/show/edit", EventLive.Show, :edit)
+      live("/events/:id/redeem", RedeemLive.Index, :index)
 
       live("/user/tickets", TicketLive.Index, :user_index)
-      live("/user/tickets/:id", TicketLive.Show, :user_show)
+      live("/tickets/:id", TicketLive.Show, :user_show)
     end
   end
 

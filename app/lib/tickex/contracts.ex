@@ -82,7 +82,7 @@ defmodule Tickex.Contracts do
     } = ticket
 
     filter = TicketStorage.EventFilters.ticket_redeemed(contract_ticket_id, nil, nil)
-    subscribe("ticket_redeemed", filter, item: ticket)
+    subscribe("ticket_redeemed", filter, item: ticket, parent: self())
 
     socket
     |> push_event("redeem-ticket", %{eventId: contract_event_id, ticketNumber: contract_ticket_id})
@@ -119,7 +119,9 @@ defmodule Tickex.Contracts do
     :halt
   end
 
-  def handle_contract_event({:ok, [_ethers_event]}, "ticket_redeemed", _opts) do
+  def handle_contract_event({:ok, [ethers_event]}, "ticket_redeemed", opts) do
+    {:ok, ticket} = Events.update_ticket(opts.item, %{redeemed: true})
+    send(opts.parent, {__MODULE__, {:saved_ticket, ticket}})
     :halt
   end
 

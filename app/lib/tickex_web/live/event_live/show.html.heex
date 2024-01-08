@@ -6,6 +6,9 @@
     <.link :if={is_owner(@current_user, @event)} patch={~p"/events/#{@event}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit event</.button>
     </.link>
+    <.link :if={is_owner(@current_user, @event)} navigate={~p"/events/#{@event}/redeem"} phx-click={JS.push_focus()}>
+      <.button>Redeem Tickets</.button>
+    </.link>
   </:actions>
 </.header>
 
