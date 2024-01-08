@@ -6,7 +6,7 @@ defmodule TickexWeb.UserSettingsLive do
   def render(assigns) do
     ~H"""
     <.header class="text-center">
-      Account Settings
+      Account Settings (currently disabled)
       <:subtitle>Manage your account settings</:subtitle>
     </.header>
 
@@ -15,7 +15,7 @@ defmodule TickexWeb.UserSettingsLive do
         <.simple_form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
           <.input field={@email_form[:email]} type="email" label="Email" required />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
+            <.button disabled phx-disable-with="Changing...">Add Email</.button>
           </:actions>
         </.simple_form>
       </div>

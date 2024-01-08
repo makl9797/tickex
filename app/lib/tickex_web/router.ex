@@ -54,15 +54,11 @@ defmodule TickexWeb.Router do
       live("/user/settings", UserSettingsLive, :edit)
       # live("/user/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
       live("/events/new", EventLive.Index, :new)
-
+      live("/events/:id/edit", EventLive.Index, :edit)
       live("/events/:id/show/edit", EventLive.Show, :edit)
 
-      live("/tickets", TicketLive.Index, :index)
-      live("/tickets/:id", TicketLive.Show, :show)
-
-      # Missing Routes
-      # /user/tickets
-      # /user/events
+      live("/user/tickets", TicketLive.Index, :user_index)
+      live("/user/tickets/:id", TicketLive.Show, :user_show)
     end
   end
 
