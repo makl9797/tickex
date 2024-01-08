@@ -95,7 +95,7 @@ defmodule Tickex.Contracts do
       %Event{opts.item | contract_event_id: contract_event_id}
       |> Tickex.Repo.insert!()
 
-    send(opts.parent, {__MODULE__, {:saved, event}})
+    send(opts.parent, {__MODULE__, {:saved_event, event}})
     :halt
   end
 
