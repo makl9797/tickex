@@ -7,6 +7,7 @@
   rows={@streams.tickets}
   row_click={fn {_id, ticket} -> JS.navigate(~p"/tickets/#{ticket}?return=#{@return}") end}
 >
+  <:col :let={{_id, ticket}} label="#"><%= ticket.contract_ticket_id %></:col>
   <:col :let={{_id, ticket}} label="Event"><%= ticket.event.title %></:col>
   <:col :let={{_id, ticket}} label="Location"><%= ticket.event.location %></:col>
   <:col :let={{_id, ticket}} label="Purchase date"><%= ticket.inserted_at %></:col>

@@ -7,11 +7,12 @@ defmodule TickexWeb.EventLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    events = Events.list_events()
+    events = Events.list_events() |> Enum.sort(fn ticket1, ticket2 -> ticket1.updated_at > ticket2.updated_at end)
 
     user_events =
       if socket.assigns.current_user do
-        events |> Enum.filter(fn event -> event.owner.id == socket.assigns.current_user.id end)
+        events
+        |> Enum.filter(fn event -> event.owner.id == socket.assigns.current_user.id end)
       else
         []
       end
@@ -48,7 +49,7 @@ defmodule TickexWeb.EventLive.Index do
   end
 
   @impl true
-  def handle_info({Tickex.Contracts, {:saved_event, event}}, socket) do
+  def handle_info({Contracts, {:saved_event, event}}, socket) do
     socket =
       socket
       |> stream_insert(:events, event)

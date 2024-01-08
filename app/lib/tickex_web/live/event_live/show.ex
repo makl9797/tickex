@@ -19,7 +19,7 @@ defmodule TickexWeb.EventLive.Show do
   end
 
   @impl true
-  def handle_info({Tickex.Contracts, {:saved_event, event}}, socket) do
+  def handle_info({Contracts, {:saved_event, event}}, socket) do
     socket =
       socket
       |> assign(:event, event)
@@ -29,7 +29,7 @@ defmodule TickexWeb.EventLive.Show do
     {:noreply, socket}
   end
 
-  def handle_info({Tickex.Contracts, {:saved_ticket, ticket}}, socket) do
+  def handle_info({Contracts, {:saved_ticket, ticket}}, socket) do
     socket =
       socket
       |> put_flash(
