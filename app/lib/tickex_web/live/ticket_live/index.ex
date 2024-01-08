@@ -34,6 +34,7 @@ defmodule TickexWeb.TicketLive.Index do
     socket
     |> assign(:page_title, "Listing Tickets")
     |> assign(:ticket, nil)
+    |> assign(:return, "/user/tickets")
   end
 
   @impl true

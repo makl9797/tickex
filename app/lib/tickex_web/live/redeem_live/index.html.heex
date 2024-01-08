@@ -1,5 +1,5 @@
 <.header>
-  My Tickets
+  Tickets for "<%= @event.title %>"
 </.header>
 
 <.table
@@ -15,14 +15,3 @@
     You haven't purchased any tickets yet.
   </:empty_state>
 </.table>
-
-<.modal :if={@live_action in [:new, :edit]} id="ticket-modal" show on_cancel={JS.patch(~p"/user/tickets")}>
-  <.live_component
-    module={TickexWeb.TicketLive.FormComponent}
-    id={@ticket.id || :new}
-    title={@page_title}
-    action={@live_action}
-    ticket={@ticket}
-    patch={~p"/user/tickets"}
-  />
-</.modal>
