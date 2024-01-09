@@ -229,7 +229,7 @@ defmodule TickexWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-blue-600 hover:bg-blue-400 py-2 px-3 disabled:bg-blue-900",
+        "phx-submit-loading:opacity-75 rounded-lg bg-brand hover:bg-light hover:text-dark py-2 px-3 disabled:bg-blue-900",
         "text-sm font-semibold leading-6 text-white active:text-white/80 disabled:white/40",
         @class
       ]}
@@ -548,10 +548,10 @@ defmodule TickexWeb.CoreComponents do
   def list(assigns) do
     ~H"""
     <div class="mt-14">
-      <dl class="-my-4 divide-y divide-zinc-100">
+      <dl class="-my-4 divide-y divide-light">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
-          <dd class="text-zinc-700"><%= render_slot(item) %></dd>
+          <dt class="w-1/4 flex-none text-brand font-semibold"><%= item.title %></dt>
+          <dd class="text-white"><%= render_slot(item) %></dd>
         </div>
       </dl>
     </div>
@@ -571,7 +571,7 @@ defmodule TickexWeb.CoreComponents do
   def back(assigns) do
     ~H"""
     <div class="mt-16">
-      <.link navigate={@navigate} class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700">
+      <.link navigate={@navigate} class="text-sm font-semibold leading-6 text-light hover:text-brand">
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>
       </.link>

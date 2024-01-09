@@ -47,7 +47,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
           <.input type="hidden" name="signature" value={@signature} />
         </.form>
         <div :if={@logged_in} class="flex items-center space-x-4">
-          <div class="bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-lg">
+          <div class="bg-light text-brand text-sm font-semibold px-4 py-2 rounded-lg">
             <%= short_wallet_address(@current_wallet_address) %>
           </div>
           <div class="relative ml-3">
@@ -56,7 +56,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
                 phx-click={toggle_dropdown()}
                 phx-click-away={close_dropdown()}
                 type="button"
-                class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-gray-800"
                 id="user-menu-button"
                 aria-expanded="false"
                 aria-haspopup="true"
@@ -76,7 +76,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
             >
               <.link
                 navigate={~p"/user/tickets"}
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                class="block px-4 py-2 text-sm text-dark hover:bg-gray-100"
                 role="menuitem"
                 tabindex="-1"
                 id="user-menu-item-1"
@@ -85,7 +85,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
               </.link>
               <.link
                 navigate={~p"/user/settings"}
-                class="block px-4 py-2 text-sm text-gray-700  hover:bg-gray-100"
+                class="block px-4 py-2 text-sm text-dark  hover:bg-gray-100"
                 role="menuitem"
                 tabindex="-1"
                 id="user-menu-item-2"
@@ -94,7 +94,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
               </.link>
               <.form for={%{}} action={~p"/logout"} method="delete" as={:user} phx-trigger-action={@logout} class="w-full">
                 <button
-                  class="block px-4 py-2 text-sm text-gray-700  hover:bg-gray-100"
+                  class="block px-4 py-2 text-sm text-dark  hover:bg-gray-100"
                   role="menuitem"
                   tabindex="-1"
                   id="user-menu-item-3"
