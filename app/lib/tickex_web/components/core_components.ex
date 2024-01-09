@@ -229,7 +229,7 @@ defmodule TickexWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-brand hover:bg-light hover:text-dark py-2 px-3 disabled:bg-brand_disabled disabled:text-white",
+        "phx-submit-loading:opacity-75 rounded-lg bg-brand hover:bg-brand_light hover:text-dark py-2 px-3 disabled:bg-light disabled:text-white",
         "text-sm font-semibold leading-6 text-white active:text-white/80 disabled:white/40",
         @class
       ]}
@@ -495,14 +495,14 @@ defmodule TickexWeb.CoreComponents do
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
           class="relative divide-y divide-zinc-100 border-t border-brand text-sm leading-6 text-white"
         >
-          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
+          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50 hover:text-black">
             <td
               :for={{col, i} <- Enum.with_index(@col)}
               phx-click={@row_click && @row_click.(row)}
               class={["relative p-0", @row_click && "hover:cursor-pointer"]}
             >
               <div class="block py-4 pr-6">
-                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-brand sm:rounded-l-xl" />
+                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-brand_light sm:rounded-l-xl" />
                 <span class={["relative", i == 0 && "font-semibold"]}>
                   <%= render_slot(col, @row_item.(row)) %>
                 </span>
@@ -510,10 +510,10 @@ defmodule TickexWeb.CoreComponents do
             </td>
             <td :if={@action != []} class="relative w-14 p-0">
               <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
-                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-brand sm:rounded-r-xl" />
+                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-brand_light sm:rounded-r-xl" />
                 <span
                   :for={action <- @action}
-                  class="relative ml-4 font-semibold leading-6 hover:text-light"
+                  class="relative ml-4 font-semibold leading-6 hover:text-brand"
                 >
                   <%= render_slot(action, @row_item.(row)) %>
                 </span>
