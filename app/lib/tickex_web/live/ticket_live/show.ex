@@ -4,18 +4,13 @@ defmodule TickexWeb.TicketLive.Show do
   alias Tickex.Events
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
-  end
+  def handle_params(%{"id" => id} = params, url, socket) do
+    socket =
+      socket
+      |> assign(:page_title, "Show Ticket")
+      |> assign(:ticket, Events.get_ticket!(id))
+      |> assign(:return, params["return"])
 
-  @impl true
-  def handle_params(%{"id" => id}, _, socket) do
-    {:noreply,
-     socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:ticket, Events.get_ticket!(id))}
+    {:noreply, socket}
   end
-
-  defp page_title(:show), do: "Show Ticket"
-  defp page_title(:edit), do: "Edit Ticket"
 end

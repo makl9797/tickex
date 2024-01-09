@@ -10,7 +10,6 @@ defmodule Tickex.Events.Ticket do
   schema "tickets" do
     field(:contract_ticket_id, :integer)
     field(:purchase_price, :float)
-    field(:purchase_date, :utc_datetime)
     field(:redeemed, :boolean, default: false)
 
     belongs_to(:event, Event)
@@ -19,10 +18,13 @@ defmodule Tickex.Events.Ticket do
     timestamps(type: :utc_datetime)
   end
 
+  @required_fields ~w[purchase_price redeemed]a
+  @optional_fields ~w[contract_ticket_id]a
+
   @doc false
   def changeset(ticket, attrs) do
     ticket
-    |> cast(attrs, [:purchase_date, :redeemed])
-    |> validate_required([:purchase_date, :redeemed])
+    |> cast(attrs, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
   end
 end

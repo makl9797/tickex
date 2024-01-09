@@ -1,7 +1,9 @@
 defmodule Tickex.Events.Event do
-  alias Tickex.Accounts.User
   use Ecto.Schema
   import Ecto.Changeset
+
+  alias Tickex.Accounts.User
+  alias Tickex.Events.Ticket
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -18,6 +20,7 @@ defmodule Tickex.Events.Event do
     field(:has_on_chain_changes, :boolean, virtual: true, default: false)
 
     belongs_to(:owner, User)
+    has_many :tickets, Ticket
 
     timestamps(type: :utc_datetime)
   end

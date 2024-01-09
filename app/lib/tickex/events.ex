@@ -121,7 +121,7 @@ defmodule Tickex.Events do
 
   """
   def list_tickets do
-    Repo.all(Ticket)
+    Repo.all(Ticket) |> Repo.preload([:event, :buyer])
   end
 
   @doc """
@@ -138,7 +138,7 @@ defmodule Tickex.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_ticket!(id), do: Repo.get!(Ticket, id)
+  def get_ticket!(id), do: Repo.get!(Ticket, id) |> Repo.preload([:event, :buyer])
 
   @doc """
   Creates a ticket.
@@ -203,5 +203,13 @@ defmodule Tickex.Events do
   """
   def change_ticket(%Ticket{} = ticket, attrs \\ %{}) do
     Ticket.changeset(ticket, attrs)
+  end
+
+  def validate_ticket(attrs), do: validate_ticket(%Ticket{}, attrs)
+
+  def validate_ticket(ticket, attrs \\ %{}) do
+    ticket
+    |> Ticket.changeset(attrs)
+    |> Ecto.Changeset.apply_action(:validate)
   end
 end

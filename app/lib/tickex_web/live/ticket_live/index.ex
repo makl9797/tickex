@@ -6,7 +6,11 @@ defmodule TickexWeb.TicketLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :tickets, Events.list_tickets())}
+    user_tickets =
+      Events.list_tickets()
+      |> Enum.filter(fn ticket -> ticket.buyer.id == socket.assigns.current_user.id end)
+
+    {:ok, stream(socket, :tickets, user_tickets)}
   end
 
   @impl true
@@ -26,10 +30,11 @@ defmodule TickexWeb.TicketLive.Index do
     |> assign(:ticket, %Ticket{})
   end
 
-  defp apply_action(socket, :index, _params) do
+  defp apply_action(socket, :user_index, _params) do
     socket
     |> assign(:page_title, "Listing Tickets")
     |> assign(:ticket, nil)
+    |> assign(:return, "/user/tickets")
   end
 
   @impl true
@@ -37,11 +42,6 @@ defmodule TickexWeb.TicketLive.Index do
     {:noreply, stream_insert(socket, :tickets, ticket)}
   end
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    ticket = Events.get_ticket!(id)
-    {:ok, _} = Events.delete_ticket(ticket)
-
-    {:noreply, stream_delete(socket, :tickets, ticket)}
-  end
+  defp redeemed(true), do: "Yes"
+  defp redeemed(_redeemed), do: "No"
 end
