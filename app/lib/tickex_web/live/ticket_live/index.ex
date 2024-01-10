@@ -2,7 +2,6 @@ defmodule TickexWeb.TicketLive.Index do
   use TickexWeb, :live_view
 
   alias Tickex.Events
-  alias Tickex.Events.Ticket
 
   @impl true
   def mount(_params, _session, socket) do

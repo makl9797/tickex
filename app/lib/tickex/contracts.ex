@@ -119,7 +119,7 @@ defmodule Tickex.Contracts do
     :halt
   end
 
-  def handle_contract_event({:ok, [ethers_event]}, "ticket_redeemed", opts) do
+  def handle_contract_event({:ok, [_ethers_event]}, "ticket_redeemed", opts) do
     {:ok, ticket} = Events.update_ticket(opts.item, %{redeemed: true})
     send(opts.parent, {__MODULE__, {:saved_ticket, ticket}})
     :halt
@@ -127,7 +127,7 @@ defmodule Tickex.Contracts do
 
   def handle_contract_event(_response, _event_name, _opts), do: :continue
 
-  def handle_errors(socket, %{"error" => "user rejected transaction" <> _rest = error}) do
+  def handle_errors(socket, %{"error" => "user rejected transaction" <> _rest}) do
     error_msg = "Transaction canceled"
 
     put_flash(socket, :error, error_msg)
