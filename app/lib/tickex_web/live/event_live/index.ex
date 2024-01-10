@@ -44,7 +44,7 @@ defmodule TickexWeb.EventLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Events")
+    |> assign(:page_title, "All Events")
     |> assign(:event, nil)
   end
 
