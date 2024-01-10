@@ -18,18 +18,6 @@ defmodule TickexWeb.TicketLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Ticket")
-    |> assign(:ticket, Events.get_ticket!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Ticket")
-    |> assign(:ticket, %Ticket{})
-  end
-
   defp apply_action(socket, :user_index, _params) do
     socket
     |> assign(:page_title, "Listing Tickets")
