@@ -83,7 +83,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
               >
                 My Tickets
               </.link>
-              <.link
+              <%!-- <.link
                 navigate={~p"/user/settings"}
                 class="block px-4 py-2 text-sm text-dark  hover:bg-gray-100"
                 role="menuitem"
@@ -91,7 +91,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
                 id="user-menu-item-2"
               >
                 Settings
-              </.link>
+              </.link> --%>
               <.form for={%{}} action={~p"/logout"} method="delete" as={:user} phx-trigger-action={@logout} class="w-full">
                 <button
                   class="block px-4 py-2 text-sm text-dark  hover:bg-gray-100"
