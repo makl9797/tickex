@@ -51,3 +51,5 @@ Tickex is an innovative decentralized ticketing solution based on blockchain tec
   ```bash
   docker-compose up
   ```
+
+Open [`localhost:4000`](http://localhost:4000/)
