@@ -50,7 +50,7 @@ RUN ["chmod", "+x", "entrypoint.sh"]
 
 ENTRYPOINT ["./entrypoint.sh"]
 
-FROM dev as builder
+FROM base as builder
 
 # install build dependencies
 RUN apt-get update -y && apt-get install -y build-essential git \
@@ -115,7 +115,7 @@ RUN chown nobody /app
 ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/kniep ./
+COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/tickex ./
 
 USER nobody
 
