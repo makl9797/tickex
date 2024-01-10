@@ -61,3 +61,7 @@ Tickex is an innovative decentralized ticketing solution based on blockchain tec
 
 - Claas Thore Klein
 - Mats Klein
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
