@@ -1,3 +1,4 @@
+![tickex](app/priv/static/images/tickex_color_light.svg)
 # Tickex: Decentralized Ticketing Solution
 
 Tickex is an innovative decentralized ticketing solution based on blockchain technology, specifically on the Polygon platform, and realized through smart contracts. This project aims to enhance security and transparency in the ticketing sector, emphasizing the development and evaluation of a functional prototype demonstrating the application and interaction of smart contracts within ticket sales.
