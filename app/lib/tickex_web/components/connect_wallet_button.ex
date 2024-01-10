@@ -47,7 +47,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
           <.input type="hidden" name="signature" value={@signature} />
         </.form>
         <div :if={@logged_in} class="flex items-center space-x-4">
-          <div class="bg-light text-brand text-sm font-semibold px-4 py-2 rounded-lg">
+          <div class="bg-light text-dark text-sm font-semibold px-4 py-2 rounded-lg">
             <%= short_wallet_address(@current_wallet_address) %>
           </div>
           <div class="relative ml-3">
