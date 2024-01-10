@@ -1,0 +1,19 @@
+<.header>
+  Ticket #<%= @ticket.contract_ticket_id %>
+  <:subtitle>This is a ticket for "<%= @ticket.event.title %>"</:subtitle>
+</.header>
+
+<.list>
+  <:item title="Ticket ID"><%= @ticket.contract_ticket_id %></:item>
+  <:item title="Owner"><%= @ticket.buyer.wallet_address %> (<span class="font-bold">You</span>)</:item>
+  <:item title="Purchase date"><%= @ticket.inserted_at %></:item>
+  <:item title="Purchase price"><%= @ticket.purchase_price %> Matic</:item>
+  <:item title="Redeemed"><%= @ticket.redeemed %></:item>
+  <:item title="Event">
+    <.link class="underline text-brand hover:text-light" navigate={~p"/events/#{@ticket.event.id}"}>
+      <%= @ticket.event.title %>
+    </.link>
+  </:item>
+</.list>
+
+<.back :if={@return} navigate={@return}>Back</.back>

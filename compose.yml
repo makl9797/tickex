@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      target: base
+    stdin_open: true
+    tty: true
+    env_file: .env
+    volumes:
+      - ./app:/app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+
+  chain:
+    build:
+      context: ./chain
+      dockerfile: Dockerfile
+      target: base
+    stdin_open: true
+    tty: true
+    env_file: .env
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./chain:/chain
+    depends_on:
+    - app
+
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tickex
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres-data:
