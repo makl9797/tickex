@@ -47,7 +47,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
           <.input type="hidden" name="signature" value={@signature} />
         </.form>
         <div :if={@logged_in} class="flex items-center space-x-4">
-          <div class="bg-light text-brand text-sm font-semibold px-4 py-2 rounded-lg">
+          <div class="bg-light text-dark text-sm font-semibold px-4 py-2 rounded-lg">
             <%= short_wallet_address(@current_wallet_address) %>
           </div>
           <div class="relative ml-3">
@@ -83,7 +83,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
               >
                 My Tickets
               </.link>
-              <.link
+              <%!-- <.link
                 navigate={~p"/user/settings"}
                 class="block px-4 py-2 text-sm text-dark  hover:bg-gray-100"
                 role="menuitem"
@@ -91,7 +91,7 @@ defmodule TickexWeb.Components.ConnectWalletButton do
                 id="user-menu-item-2"
               >
                 Settings
-              </.link>
+              </.link> --%>
               <.form for={%{}} action={~p"/logout"} method="delete" as={:user} phx-trigger-action={@logout} class="w-full">
                 <button
                   class="block px-4 py-2 text-sm text-dark  hover:bg-gray-100"

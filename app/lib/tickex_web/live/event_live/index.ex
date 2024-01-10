@@ -7,7 +7,9 @@ defmodule TickexWeb.EventLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    events = Events.list_events() |> Enum.sort(fn ticket1, ticket2 -> ticket1.updated_at > ticket2.updated_at end)
+    events =
+      Events.list_events()
+      |> Enum.sort(fn ticket1, ticket2 -> ticket1.updated_at > ticket2.updated_at end)
 
     user_events =
       if socket.assigns.current_user do
@@ -53,6 +55,7 @@ defmodule TickexWeb.EventLive.Index do
     socket =
       socket
       |> stream_insert(:events, event)
+      |> stream_insert(:user_events, event)
       |> put_flash(:info, "Event created successfully")
       |> push_patch(to: ~p"/events")
 

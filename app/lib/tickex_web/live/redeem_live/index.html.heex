@@ -12,11 +12,11 @@
   <:col :let={{_id, ticket}} label="Location"><%= ticket.event.location %></:col>
   <:col :let={{_id, ticket}} label="Purchase date"><%= ticket.inserted_at %></:col>
   <:action :let={{_id, ticket}}>
-    <.button disabled={ticket.redeemed} phx-click="redeem-ticket" phx-hook="Contracts" phx-value-ticket_id={ticket.id} >
+    <.button disabled={ticket.redeemed} phx-click="redeem-ticket" phx-hook="Contracts" phx-value-ticket_id={ticket.id}>
       Redeem
     </.button>
   </:action>
   <:empty_state>
-    You haven't purchased any tickets yet.
+    No tickets purchased yet.
   </:empty_state>
 </.table>

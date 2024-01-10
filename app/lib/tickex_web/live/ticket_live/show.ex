@@ -4,7 +4,7 @@ defmodule TickexWeb.TicketLive.Show do
   alias Tickex.Events
 
   @impl true
-  def handle_params(%{"id" => id} = params, url, socket) do
+  def handle_params(%{"id" => id} = params, _url, socket) do
     socket =
       socket
       |> assign(:page_title, "Show Ticket")

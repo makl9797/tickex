@@ -3,7 +3,6 @@ defmodule TickexWeb.RedeemLive.Index do
 
   alias Tickex.Contracts
   alias Tickex.Events
-  alias Tickex.Events.Ticket
 
   @impl true
   def handle_params(%{"id" => id}, _url, socket) do
@@ -34,7 +33,7 @@ defmodule TickexWeb.RedeemLive.Index do
     {:noreply, socket}
   end
 
-  def handle_event("redeem-ticket", %{"ticket_id" => ticket_id} = params, socket) do
+  def handle_event("redeem-ticket", %{"ticket_id" => ticket_id}, socket) do
     ticket = Events.get_ticket!(ticket_id)
 
     {:noreply, Contracts.redeem_ticket(socket, ticket)}
@@ -44,7 +43,4 @@ defmodule TickexWeb.RedeemLive.Index do
   def handle_event("failed-" <> _event, params, socket) do
     {:noreply, Contracts.handle_errors(socket, params)}
   end
-
-  defp redeemed(true), do: "Yes"
-  defp redeemed(_redeemed), do: "No"
 end

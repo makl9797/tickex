@@ -10,7 +10,9 @@
   <:item title="Purchase price"><%= @ticket.purchase_price %> Matic</:item>
   <:item title="Redeemed"><%= @ticket.redeemed %></:item>
   <:item title="Event">
-    <.link class="underline text-brand hover:text-light" navigate={~p"/events/#{@ticket.event.id}"}><%= @ticket.event.title %></.link>
+    <.link class="underline text-brand hover:text-light" navigate={~p"/events/#{@ticket.event.id}"}>
+      <%= @ticket.event.title %>
+    </.link>
   </:item>
 </.list>
 

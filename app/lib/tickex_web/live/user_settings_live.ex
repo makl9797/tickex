@@ -70,7 +70,7 @@ defmodule TickexWeb.UserSettingsLive do
         Accounts.deliver_user_update_email_instructions(
           applied_user,
           user.email,
-          &url(~p"/users/settings/confirm_email/#{&1}")
+          &url(~p"/#{&1}")
         )
 
         info = "A link to confirm your email change has been sent to the new address."
