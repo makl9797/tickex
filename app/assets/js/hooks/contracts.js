@@ -13,9 +13,10 @@ export const Contracts = {
         const eventManagement = new ethers.Contract(EVENT_MANAGEMENT_ADDRESS, EventManagement.abi, signer);
         const ticketManagement = new ethers.Contract(TICKET_MANAGEMENT_ADDRESS, TicketManagement.abi, signer);
 
-        window.addEventListener(`phx:create-event`, async (e) => {
+
+        this.handleEvent("create-event", data => {
             try {
-                const { ticketPrice, ticketsAvailable } = e.detail;
+                const { ticketPrice, ticketsAvailable } = data;
                 const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
                 await eventManagement.createEvent(formattedTicketPrice, ticketsAvailable);
             } catch (error) {
@@ -23,9 +24,9 @@ export const Contracts = {
             }
         });
 
-        window.addEventListener(`phx:update-event`, async (e) => {
+        this.handleEvent("update-event", data => {
             try {
-                const { eventId, newTicketPrice, newTicketsAvailable } = e.detail;
+                const { eventId, newTicketPrice, newTicketsAvailable } = data;
                 const formattedNewTicketPrice = ethers.utils.parseUnits(newTicketPrice.toString(), "ether");
                 await eventManagement.updateEvent(eventId, formattedNewTicketPrice, newTicketsAvailable);
             } catch (error) {
@@ -33,9 +34,9 @@ export const Contracts = {
             }
         });
 
-        window.addEventListener(`phx:buy-ticket`, async (e) => {
+        this.handleEvent("buy-ticket", data => {
             try {
-                const { eventId, ticketPrice } = e.detail;
+                const { eventId, ticketPrice } = data;
                 const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
                 await ticketManagement.buyTicket(eventId, { value: formattedTicketPrice });
             } catch (error) {
@@ -43,9 +44,9 @@ export const Contracts = {
             }
         });
 
-        window.addEventListener(`phx:redeem-ticket`, async (e) => {
+        this.handleEvent("redeem-ticket", data => {
             try {
-                const { eventId, ticketNumber } = e.detail;
+                const { eventId, ticketNumber } = data;
                 await eventManagement.redeemTicket(eventId, ticketNumber);
             } catch (error) {
                 this.pushEvent("failed-redeem-ticket", { error: error.message });
