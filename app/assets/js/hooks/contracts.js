@@ -14,7 +14,7 @@ export const Contracts = {
         const ticketManagement = new ethers.Contract(TICKET_MANAGEMENT_ADDRESS, TicketManagement.abi, signer);
 
 
-        this.handleEvent("create-event", data => {
+        this.handleEvent("create-event", async data => {
             try {
                 const { ticketPrice, ticketsAvailable } = data;
                 const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
@@ -24,7 +24,7 @@ export const Contracts = {
             }
         });
 
-        this.handleEvent("update-event", data => {
+        this.handleEvent("update-event", async data => {
             try {
                 const { eventId, newTicketPrice, newTicketsAvailable } = data;
                 const formattedNewTicketPrice = ethers.utils.parseUnits(newTicketPrice.toString(), "ether");
@@ -34,7 +34,8 @@ export const Contracts = {
             }
         });
 
-        this.handleEvent("buy-ticket", data => {
+        this.handleEvent("buy-ticket", async data => {
+            console.log("TEST")
             try {
                 const { eventId, ticketPrice } = data;
                 const formattedTicketPrice = ethers.utils.parseUnits(ticketPrice.toString(), "ether");
@@ -44,7 +45,7 @@ export const Contracts = {
             }
         });
 
-        this.handleEvent("redeem-ticket", data => {
+        this.handleEvent("redeem-ticket", async data => {
             try {
                 const { eventId, ticketNumber } = data;
                 await eventManagement.redeemTicket(eventId, ticketNumber);

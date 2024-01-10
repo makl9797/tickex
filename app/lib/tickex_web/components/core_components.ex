@@ -142,14 +142,15 @@ defmodule TickexWeb.CoreComponents do
   """
   attr(:flash, :map, required: true, doc: "the map of flash messages")
   attr(:id, :string, default: "flash-group", doc: "the optional id of flash container")
+  attr(:id_prefix, :string, default: "")
 
   def flash_group(assigns) do
     ~H"""
-    <div id={@id}>
+    <div id={"#{@id_prefix}-#{@id}"}>
       <.flash kind={:info} title="Success!" flash={@flash} />
       <.flash kind={:error} title="Error!" flash={@flash} />
       <.flash
-        id="client-error"
+        id={"#{@id_prefix}-client-error"}
         kind={:error}
         title="We can't find the internet"
         phx-disconnected={show(".phx-client-error #client-error")}
@@ -160,7 +161,7 @@ defmodule TickexWeb.CoreComponents do
       </.flash>
 
       <.flash
-        id="server-error"
+        id={"#{@id_prefix}-server-error"}
         kind={:error}
         title="Something went wrong!"
         phx-disconnected={show(".phx-server-error #server-error")}
